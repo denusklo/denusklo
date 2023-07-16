@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Food from "../components/vue/food.vue";
 
 const pageTitle = "About Me";
 
@@ -32,6 +33,10 @@ const goal = 3;
   <ul>
     {skills.map((skill) => <li class="skill">{skill}</li>)}
   </ul>
+
+  <h1>Food I like:</h1>
+  <Food />
+
   {happy && <p>I am happy to be learning Astro!</p>}
 
   {finished && <p>I finished this tutorial!</p>}

@@ -2,6 +2,7 @@
 import Hamburger from '../components/Hamburger.astro';
 import Navigation from '../components/Navigation.astro';
 import ThemeIcon from './ThemeIcon.astro';
+import VueNavigation from "../components/vue/navigation.vue";
 
 ---
 <header>
@@ -10,5 +11,6 @@ import ThemeIcon from './ThemeIcon.astro';
     <ThemeIcon />
     <Navigation/>
   </nav>
+  <VueNavigation client:load/>
 </header>
 
