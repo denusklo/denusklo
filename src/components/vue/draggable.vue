@@ -12,6 +12,6 @@ const { x, y, style } = useDraggable(el, {
 
 <template>
   <div ref="el" :style="style" style="position: fixed; cursor: grabbing;">
-    Drag me! I am at {{x}}, {{y}}
+    "Vueuse Drag" I am at {{x}}, {{y}}
   </div>
 </template>
