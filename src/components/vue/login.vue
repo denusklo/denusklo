@@ -24,12 +24,12 @@ export default {
   methods: {
     async submitForm() {
       try {
-        const response = await fetch(import.meta.env.PUBLIC_API_URL + '/v1/test', {
-          method: 'GET',
+        const response = await fetch(import.meta.env.PUBLIC_API_URL + '/v1/login', {
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          data: JSON.stringify({
+          body: JSON.stringify({
             username: this.username,
             password: this.password,
           }),
@@ -46,6 +46,9 @@ export default {
           this.responseData = data;
 
           console.log(data);
+
+          const accessToken = response.data.access_token;
+          localStorage.setItem('access_token', accessToken);
 
         } else {
           // Request failed, handle the error if needed
