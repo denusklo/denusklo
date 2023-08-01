@@ -20,12 +20,14 @@
   <p>Cart({{ cart.length }})</p>
   <product :premium="premium" @add-to-cart="addToCart" @remove-from-cart="removeFromCart"></product>
   <login></login>
+  <postLogin></postLogin>
 </template>
 
 
 <script>
   import product from './product.vue';
   import login from './login.vue';
+  import postLogin from './post-login.vue';
   import detail from './product-detail.vue';
 
   export default {
@@ -33,6 +35,7 @@
       product,
       detail,
       login,
+      postLogin,
     },
     data() {
       return {

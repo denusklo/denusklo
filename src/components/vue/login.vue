@@ -30,7 +30,7 @@ export default {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            username: this.username,
+            email: this.username,
             password: this.password,
           }),
         });
@@ -47,7 +47,7 @@ export default {
 
           console.log(data);
 
-          const accessToken = response.data.access_token;
+          const accessToken = response.access_token;
           localStorage.setItem('access_token', accessToken);
 
         } else {
