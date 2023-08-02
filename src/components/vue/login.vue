@@ -45,9 +45,7 @@ export default {
           // Update the Vue component's data with the received data
           this.responseData = data;
 
-          console.log(data);
-
-          const accessToken = response.access_token;
+          const accessToken = data.access_token;
           localStorage.setItem('access_token', accessToken);
 
         } else {
