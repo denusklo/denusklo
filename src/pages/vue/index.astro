@@ -18,7 +18,18 @@ const pageTitle = "Vue";
 <script>
 import { createApp } from 'vue';
 import App from '../../components/vue/app.vue';
-import router from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
+import About from '../../vue-route/router-about.vue';
+
+const routes = [
+  { path: '/', component: App },
+  { path: '/router-about', component: About },
+];
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+});
 
 const app = createApp(App);
 app.use(router);
