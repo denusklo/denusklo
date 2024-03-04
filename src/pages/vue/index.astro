@@ -19,19 +19,9 @@ const pageTitle = "Vue";
 import { createApp } from 'vue';
 import App from '../../components/vue/app.vue';
 import { createRouter, createWebHistory } from 'vue-router';
-import About from '../../vue-route/router-about.vue';
-
-const routes = [
-  { path: '/', component: App },
-  { path: '/router-about', component: About },
-];
-
-const router = createRouter({
-  history: createWebHistory(),
-  routes,
-});
+import { createPinia } from 'pinia'
 
 const app = createApp(App);
-app.use(router);
+app.use(createPinia);
 app.mount('#app');
 </script>

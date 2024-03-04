@@ -4,5 +4,9 @@
     "jsx": "preserve",
     "jsxImportSource": "preact",
     "types": ["vue"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+    },
   }
 }

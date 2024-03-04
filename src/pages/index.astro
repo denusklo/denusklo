@@ -1,9 +1,29 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Greeting from '../components/preact/Greeting.jsx';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Greeting from '@/components/preact/Greeting.jsx';
+
 const pageTitle = "Home Page";
+
+
+
 ---
 <BaseLayout pageTitle={pageTitle}>
   <h2>My awesome blog subtitle</h2>
 	<Greeting client:load messages={["Hej", "Hallo", "Hola", "Habari"]} />
+  
+  <section class="w-full h-screen relative">
+    <!-- <div class="absolute top-28 left-0 right-0 z-10 flex items-center justify-center">
+      POPUP
+    </div> -->
+    
+
+  </section>
 </BaseLayout>
+
+
+<script>
+  import example from '@/components/example.js';
+  
+  console.log(example);
+  
+</script>
