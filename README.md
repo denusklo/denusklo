@@ -4,6 +4,7 @@
     }
 </style>
 
+<html>
 <h1 align="center">Hi 👋, I'm Kong Chak Sung</h1>
 <h3 align="center">A Laravel fullstack developer from Malaysia</h3>
 
@@ -60,3 +61,4 @@
         <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/vuejs/vuejs-original-wordmark.svg" alt="vuejs" width="40" height="40"/>
     </a> 
 </p>
+</html>
