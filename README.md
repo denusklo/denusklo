@@ -1,3 +1,18 @@
+<style>
+    h1 {
+        color: red;
+        animation: mymove 2s infinite;
+    }
+
+    @keyframes mymove {
+        from {
+            color: red;
+        }
+        to {
+            color: yellow;
+        }
+    }
+</style>
 <h1 align="center">Hi 👋, I'm Kong Chak Sung</h1>
 <h3 align="center">A Laravel fullstack developer from Malaysia</h3>
 
@@ -54,5 +69,3 @@
         <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/vuejs/vuejs-original-wordmark.svg" alt="vuejs" width="40" height="40"/>
     </a> 
 </p>
-
-![bootstrap](https://raw.githubusercontent.com/devicons/devicon/master/icons/bootstrap/bootstrap-plain-wordmark.svg)
