@@ -1,3 +1,25 @@
+<svg fill="none" viewBox="0 0 400 400" width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+    <foreignObject width="100%" height="100%">
+        <div xmlns="http://www.w3.org/1999/xhtml">
+            <style>
+            h1 {
+                color: red;
+                animation: mymove 2s infinite;
+            }
+
+            @keyframes mymove {
+                from {
+                    color: red;
+                }
+                to {
+                    color: yellow;
+                }
+            }
+            </style>
+            <h1>HELLO WORLD!</h1>
+        </div>
+    </foreignObject>
+</svg>
 <h1 align="center">Hi 👋, I'm Kong Chak Sung</h1>
 <h3 align="center">A Laravel fullstack developer from Malaysia</h3>
 
@@ -14,9 +36,9 @@
 
 <h3 align="left">Languages and Tools:</h3>
 <p align="left">
+    <a href="https://getbootstrap.com" target="_blank" rel="noreferrer" text-decoration="none">
         <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/bootstrap/bootstrap-plain-wordmark.svg" alt="bootstrap" width="40" height="40"/> 
-    <!-- <a href="https://getbootstrap.com" target="_blank" rel="noreferrer" text-decoration="none">
-    </a>  -->
+    </a> 
     <a href="https://www.w3schools.com/css/" target="_blank" rel="noreferrer">
         <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original-wordmark.svg" alt="css3" width="40" height="40"/> 
     </a> 
