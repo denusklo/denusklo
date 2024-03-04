@@ -1,9 +1,12 @@
+---
+output: 
+  html_document:
+     css: md.style.css
+     self_contained: no
+
+---
+
 <html>
-<style>
-    p > a {
-        text-decoration: none;
-    }
-</style>
 <h1 align="center">Hi 👋, I'm Kong Chak Sung</h1>
 <h3 align="center">A Laravel fullstack developer from Malaysia</h3>
 
