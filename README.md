@@ -1,12 +1,3 @@
----
-output: 
-  html_document:
-     css: md.style.css
-     self_contained: no
-
----
-
-<html>
 <h1 align="center">Hi 👋, I'm Kong Chak Sung</h1>
 <h3 align="center">A Laravel fullstack developer from Malaysia</h3>
 
@@ -23,6 +14,7 @@ output:
 
 <h3 align="left">Languages and Tools:</h3>
 <p align="left">
+    ![bootstrap](https://raw.githubusercontent.com/devicons/devicon/master/icons/bootstrap/bootstrap-plain-wordmark.svg)
     <a href="https://getbootstrap.com" target="_blank" rel="noreferrer" style="text-decoration: none;">
         <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/bootstrap/bootstrap-plain-wordmark.svg" alt="bootstrap" width="40" height="40"/> 
     </a> 
@@ -63,4 +55,3 @@ output:
         <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/vuejs/vuejs-original-wordmark.svg" alt="vuejs" width="40" height="40"/>
     </a> 
 </p>
-</html>
