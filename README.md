@@ -1,5 +1,4 @@
 <h1 align="center">Hi 👋, I'm Kong Chak Sung</h1>
-![bootstrap](https://raw.githubusercontent.com/devicons/devicon/master/icons/bootstrap/bootstrap-plain-wordmark.svg)
 <h3 align="center">A Laravel fullstack developer from Malaysia</h3>
 
 - 🌱 I’m currently learning **Vue.js, Pinia, Astro, React**
@@ -55,3 +54,5 @@
         <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/vuejs/vuejs-original-wordmark.svg" alt="vuejs" width="40" height="40"/>
     </a> 
 </p>
+
+![bootstrap](https://raw.githubusercontent.com/devicons/devicon/master/icons/bootstrap/bootstrap-plain-wordmark.svg)
