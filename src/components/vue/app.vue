@@ -1,28 +1,35 @@
-<style>
-.color-circle {
-  width: 50px;
-  height: 50px;
-  margin-top: 8px;
-  border: 2px solid #d8d8d8;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.disabledButton {
-  background-color: #d8d8d8;
-  cursor: not-allowed;
-}
-</style>
-
-
 <template>
-  <p>Cart({{ cart.length }})</p>
-  <product :premium="premium" @add-to-cart="addToCart" @remove-from-cart="removeFromCart"></product>
-  <login></login>
-  <postLogin></postLogin>
+  <div class="vue-app-container">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">Shopping Cart</h2>
+      <div class="relative">
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
+          Cart
+          <span class="ml-1 px-2 py-0.5 text-xs rounded-full bg-indigo-200 dark:bg-indigo-800">{{ cart.length }}</span>
+        </span>
+      </div>
+    </div>
+    
+    <product 
+      :premium="premium" 
+      @add-to-cart="addToCart" 
+      @remove-from-cart="removeFromCart"
+      class="mb-8"
+    ></product>
+    
+    <div class="grid md:grid-cols-2 gap-8">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Account Login</h3>
+        <login></login>
+      </div>
+      
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">User Profile</h3>
+        <postLogin></postLogin>
+      </div>
+    </div>
+  </div>
 </template>
-
 
 <script>
   import product from './product.vue';
@@ -48,19 +55,11 @@
         this.cart.push(id)
       },
       removeFromCart(id) {
-
         const lastIndex = this.cart.lastIndexOf(id);
-
-        // Check if the item is found in the array
         if (lastIndex !== -1) {
-          // Use splice to remove the item at the found index
           this.cart.splice(lastIndex, 1);
         }
-
       }
     }
-
   }
-
-
 </script>
