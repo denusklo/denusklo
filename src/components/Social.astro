@@ -4,9 +4,27 @@ const { platform, username } = Astro.props;
 <style>
   a {
     padding: 0.5rem 1rem;
-    color: white;
-    background-color: #4c1d95;
+    color: #FBFFE4; /* Light cream text color */
+    background-color: #A3D1C6; /* Teal/mint background */
     text-decoration: none;
+    border-radius: 0.25rem;
+    transition: all 0.3s ease;
+  }
+  
+  a:hover {
+    background-color: #B3D8A8; /* Mint green on hover */
+    color: #FBFFE4; /* Keep light cream text on hover */
+  }
+
+  /* For dark mode compatibility */
+  :global(.dark) a {
+    background-color: #A3D1C6; /* Keep the same teal/mint in dark mode */
+    color: #FBFFE4; /* Light cream text in dark mode */
+  }
+
+  :global(.dark) a:hover {
+    background-color: #B3D8A8; /* Light mint green on hover in dark mode */
+    color: #FBFFE4; /* Light cream text */
   }
 </style>
 

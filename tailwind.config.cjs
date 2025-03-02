@@ -1,20 +1,28 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
 	content: [
-		'./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+		'./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'
+	],
+	darkMode: 'class',
 	theme: {
 		extend: {
 			colors: {
-			gray: {
-				200: "#D5DAE1"
-			},
-			black: {
-				DEFAULT: "#000",
-				500: "#1D2235"
-			},
-			blue: {
-				500: "#2b77e7"
-			}
+				theme: {
+          light: '#FFF2F2',    // Light pink/cream
+          medium: '#A9B5DF',   // Light lavender
+          primary: '#7886C7',  // Medium purple
+          dark: '#2D336B',     // Deep navy
+        },
+				gray: {
+					200: "#D5DAE1"
+				},
+				black: {
+					DEFAULT: "#000",
+					500: "#1D2235"
+				},
+				blue: {
+					500: "#2b77e7"
+				}
 			},
 			fontFamily: {
 				worksans: ["Work Sans", "sans-serif"],

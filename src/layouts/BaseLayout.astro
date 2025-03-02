@@ -1,23 +1,41 @@
 ---
 import '@/styles/global.css';
 import Header from '@/components/Header.astro';
-import Footer from '@/components/Footer.astro';	
+import Footer from '@/components/Footer.astro';
 
-const {pageTitle} = Astro.props;
+const { pageTitle } = Astro.props;
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{pageTitle}</title>
-	</head>
-	<body>
-		<Header/>
-		<h1>{pageTitle}</h1>
-    <slot />
-    <Footer/>
-	</body>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content="Kong Chak Sung's portfolio website - Laravel fullstack developer from Malaysia" />
+    <title>{pageTitle} | Kong Chak Sung</title>
+    <!-- Add Google Fonts if needed -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="min-h-screen bg-gray-50 dark:bg-gray-900 dark:text-white font-worksans">
+    <div class="flex flex-col min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Header />
+      
+      <main class="flex-grow py-8">
+        <h1 class="text-4xl font-bold mb-8">{pageTitle}</h1>
+        <slot />
+      </main>
+      
+      <Footer />
+    </div>
+    
+    <!-- This script enables view transitions if you decide to use them -->
+    <script>
+      document.addEventListener('astro:page-load', () => {
+        // Any client-side scripts can go here
+      });
+    </script>
+  </body>
 </html>

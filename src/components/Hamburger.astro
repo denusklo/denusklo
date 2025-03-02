@@ -1,7 +1,39 @@
 ---
 ---
-<div class="hamburger">
+
+<div class="hamburger p-2 rounded-md hover:bg-theme-light dark:hover:bg-theme-dark/30 transition duration-150 cursor-pointer">
   <span class="line"></span>
   <span class="line"></span>
   <span class="line"></span>
 </div>
+
+<style>
+  .hamburger {
+    padding-right: 20px;
+  }
+
+  .hamburger .line {
+    display: block;
+    width: 24px;
+    height: 2px;
+    margin-bottom: 6px;
+    background-color: #7886C7; /* theme-primary */
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .hamburger.active .line:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  
+  .hamburger.active .line:nth-child(2) {
+    opacity: 0;
+  }
+  
+  .hamburger.active .line:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  html.dark .hamburger .line {
+    background-color: #A9B5DF; /* theme-medium */
+  }
+</style>

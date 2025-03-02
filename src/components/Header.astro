@@ -2,15 +2,38 @@
 import Hamburger from '../components/Hamburger.astro';
 import Navigation from '../components/Navigation.astro';
 import ThemeIcon from './ThemeIcon.astro';
-import VueNavigation from "../components/vue/navigation.vue";
-
 ---
-<header>
-  <nav>
-    <Hamburger/>
-    <ThemeIcon />
-    <Navigation/>
-  </nav>
-  <VueNavigation client:load/>
+
+<header class="py-4 border-b border-theme-medium dark:border-theme-primary [&_a]:no-underline [&_a:hover]:no-underline [&_a:focus]:no-underline">
+  <div class="flex items-center justify-between">
+    <div class="flex items-center space-x-4">
+      <a href="/" class="text-2xl font-bold text-theme-dark dark:text-theme-light">CS</a>
+      <ThemeIcon />
+    </div>
+    
+    <div class="hidden md:block">
+      <Navigation />
+    </div>
+    
+    <div class="md:hidden">
+      <Hamburger />
+    </div>
+  </div>
+  
+  <!-- Mobile menu, hidden by default -->
+  <div class="nav-links hidden md:hidden mt-4 rounded-md overflow-hidden shadow-lg">
+    <Navigation />
+  </div>
 </header>
 
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    
+    hamburger?.addEventListener('click', () => {
+      navLinks?.classList.toggle('expanded');
+      hamburger?.classList.toggle('active');
+    });
+  });
+</script>

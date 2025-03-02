@@ -1,27 +1,33 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Greeting from '@/components/preact/Greeting.jsx';
-
+import Greeting from '@/components/vue/greeting.vue';
+import greetings from '@/data/greetings.js';
 const pageTitle = "Home Page";
-
-
-
 ---
 <BaseLayout pageTitle={pageTitle}>
-  <h2>My awesome blog subtitle</h2>
-	<Greeting client:load messages={["Hej", "Hallo", "Hola", "Habari"]} />
-  
-  <!-- <section class="w-full h-screen relative">
-    <div class="absolute top-28 left-0 right-0 z-10 flex items-center justify-center">
-      POPUP
+  <section class="mb-12">
+    <Greeting client:load messages={greetings} />
+  </section>
+ 
+  <section class="bg-gray-100 dark:bg-gray-800 p-8 rounded-lg shadow-md mb-12">
+    <h2 class="text-2xl font-semibold mb-4">About Me</h2>
+    <p class="mb-4">I'm Kong Chak Sung, a Laravel fullstack developer from Malaysia, currently expanding my skills in Vue.js, Pinia, Astro, and React.</p>
+    <a href="/about" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">Learn more →</a>
+  </section>
+ 
+  <section class="mb-12">
+    <h2 class="text-2xl font-semibold mb-4">Recent Blog Posts</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- You can loop through blog posts here later -->
+      <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-6 hover:shadow-lg transition-shadow">
+        <h3 class="text-xl font-medium mb-2">My First Blog Post</h3>
+        <p class="text-gray-600 dark:text-gray-300 mb-4">This is the first post of my new Astro blog.</p>
+        <a href="/blog" class="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300">Read more →</a>
+      </div>
     </div>
-  </section> -->
+  </section>
 </BaseLayout>
-
-
 <script>
   import example from '@/components/example.js';
-  
   console.log(example);
-  
 </script>

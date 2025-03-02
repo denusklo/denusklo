@@ -1,5 +1,5 @@
 html {
-  background-color: #f1f5f9;
+  background-color: #FFF2F2; /* theme-light */
   font-family: sans-serif;
 }
 
@@ -9,6 +9,7 @@ body {
   max-width: 80ch;
   padding: 1rem;
   line-height: 1.5 !important;
+  color: #2D336B; /* theme-dark */
 }
 
 * {
@@ -18,80 +19,86 @@ body {
 h1 {
   margin: 1rem 0;
   font-size: 2.5rem;
+  color: #2D336B; /* theme-dark */
 }
 
-/* nav styles */
-.hamburger {
-  padding-right: 20px;
-  cursor: pointer;
-}
-
-.hamburger .line {
-  display: block;
-  width: 40px;
-  height: 5px;
-  margin-bottom: 10px;
-  background-color: #ff9776;
-}
-
-.nav-links {
-  width: 100%;
-  top: 5rem;
-  left: 48px;
-  background-color: #ff9776;
-  display: none;
-  margin: 0;
-}
-
-.nav-links a {
-  display: block;
-  text-align: center;
-  padding: 10px 0;
+a {
+  color: #7886C7; /* theme-primary */
   text-decoration: none;
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-transform: uppercase;
 }
 
-.nav-links a:hover, a:focus {
-  background-color: #ff9776;
+a:hover {
+  text-decoration: underline;
 }
 
+/* Specifically prevent underlines on navigation items */
+nav a, .nav-links a, header a {
+  text-decoration: none;
+}
+
+nav a:hover, .nav-links a:hover, header a:hover,
+nav a:focus, .nav-links a:focus, header a:focus {
+  text-decoration: none;
+}
+
+/* Mobile menu toggle visibility */
 .expanded {
-  display: unset;
+  display: block !important;
 }
 
 @media screen and (min-width: 636px) {
-  .nav-links {
-    margin-left: 5em;
-    display: block;
-    position: static;
-    width: auto;
-    background: none;
-  }
-
-  .nav-links a {
-    display: inline-block;
-    padding: 15px 20px;
-  }
   .hamburger {
     display: none;
   }
 }
 
+/* Dark mode */
 html.dark {
-  background-color: #0d0950;
-  color: #fff;
+  background-color: #1a1a2e; /* Darker than theme-dark for better contrast */
+  color: #FFF2F2; /* theme-light */
 }
 
-.dark .nav-links a {
-  color: #fff;
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6 {
+  color: #A9B5DF; /* theme-medium */
 }
 
 .dark a {
-  color: #fff;
+  color: #A9B5DF; /* theme-medium */
 }
 
 .dark .tag {
-  background-color: #37474b;
+  background-color: #2D336B; /* theme-dark */
+  color: #FFF2F2; /* theme-light */
+  border-color: #7886C7; /* theme-primary */
+}
+
+/* For tags display */
+.tag {
+  display: inline-block;
+  margin: 0.25rem;
+  padding: 0.5rem 1rem;
+  background-color: #A9B5DF; /* theme-medium */
+  color: #2D336B; /* theme-dark */
+  border-radius: 0.5rem;
+  text-decoration: none !important;
+  font-size: 0.9rem;
+  border: 1px solid #7886C7; /* theme-primary */
+  transition: all 0.2s ease;
+}
+
+.tag:hover {
+  background-color: #7886C7; /* theme-primary */
+  color: #FFF2F2; /* theme-light */
+  transform: translateY(-2px);
+}
+
+/* Fix focus outlines for accessibility */
+a:focus, button:focus {
+  outline: 2px solid #7886C7; /* theme-primary */
+  outline-offset: 2px;
 }

@@ -2,17 +2,33 @@
 import '../styles/global.css';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Food from "../components/vue/food.vue";
+import AboutHero from "../components/vue/about/AboutHero.vue";
+import SkillsSection from "../components/vue/about/SkillsSection.vue";
+import ProjectsSection from "../components/vue/about/ProjectsSection.vue";
+import ServicesSection from "../components/vue/about/ServicesSection.vue";
+import ExperienceTimeline from "../components/vue/about/ExperienceTimeline.vue";
+import TestimonialsSection from "../components/vue/about/TestimonialsSection.vue";
+import WeatherWidget from "../components/vue/about/WeatherWidget.vue";
+import GitHubActivity from "../components/vue/about/GitHubActivity.vue";
+import ContactSection from "../components/vue/about/ContactSection.vue";
 
 const pageTitle = "About Me";
 
+// Personal information
 const identity = {
-  firstName: "Sarah",
-  country: "Canada",
-  occupation: "Technical Writer",
-  hobbies: ["photography", "birdwatching", "baseball"],
+  firstName: "Kong Chak Sung",
+  country: "Malaysia",
+  occupation: "Web Dev",
+  hobbies: ["basketball", "badminton", "swimming"],
+  location: "Sarawak, Malaysia",
+  email: "denusklo@gmail.com",
+  website: "www.denusklo.com"
 };
 
-const skills = ["HTML", "CSS", "JavaScript", "React", "Astro", "Writing Docs"];
+const skills = ["HTML", "CSS", "JavaScript", "React", "Astro", "Vue", "Node.js", "Tailwind", 
+                "Laravel", "PHP", "Firebase", "Firestore", "CodeIgniter", "jQuery", 
+                "OpenAI API", "Python Flask", "FastAPI", "Telegram API", 
+                "Stripe", "Lekirpay", "Billplz", "Paydip", "Web3"];
 
 const happy = true;
 const finished = false;
@@ -20,29 +36,73 @@ const goal = 3;
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-  <h2>... and my new Astro site!</h2>
+  <!-- Hero Section with Vue Component -->
+  <AboutHero 
+    firstName={identity.firstName}
+    country={identity.country}
+    occupation={identity.occupation}
+    client:load
+  />
   
-  <ul>
-    <li>My name is {identity.firstName}.</li>
-    <li>I live in {identity.country} and I work as a {identity.occupation}.</li>
-    {identity.hobbies.length >= 2 &&
-      <li>Two of my hobbies are: {identity.hobbies[0]} and {identity.hobbies[1]}</li>
-    }
-  </ul>
-  <p>My skills are:</p>
-  <ul>
-    {skills.map((skill) => <li class="skill">{skill}</li>)}
-  </ul>
+  <!-- About Info Section -->
+  <div class="max-w-4xl mx-auto px-4 py-12">
+    <h2 class="text-3xl font-bold mb-8 text-gray-800">... and my new Astro site!</h2>
+    
+    <!-- Original About Content -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-10">
+      <ul class="space-y-2 mb-6">
+        <li>My name is {identity.firstName}.</li>
+        <li>I live in {identity.country} and I work as a {identity.occupation}.</li>
+        {identity.hobbies.length >= 2 &&
+          <li>Two of my hobbies are: {identity.hobbies[0]} and {identity.hobbies[1]}</li>
+        }
+      </ul>
+      
+      <p class="font-medium mb-2">My skills are:</p>
+      <ul class="flex flex-wrap gap-2 mb-6">
+        {skills.map((skill) => <li class="skill bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">{skill}</li>)}
+      </ul>
 
-  <h1>Food I like:</h1>
-  <Food />
+      {happy && <p class="bg-green-50 border-l-4 border-green-500 p-4 my-4">I am happy to be learning Astro!</p>}
 
-  {happy && <p>I am happy to be learning Astro!</p>}
+      {finished && <p class="bg-purple-50 border-l-4 border-purple-500 p-4 my-4">I finished this tutorial!</p>}
 
-  {finished && <p>I finished this tutorial!</p>}
-
-  {goal === 3 ? <p>My goal is to finish in 3 days.</p> : <p>My goal is not 3 days.</p>}
+      {goal === 3 ? 
+        <p class="bg-blue-50 border-l-4 border-blue-500 p-4 my-4">My goal is to finish in 3 days.</p> : 
+        <p class="bg-yellow-50 border-l-4 border-yellow-500 p-4 my-4">My goal is not 3 days.</p>
+      }
+    </div>
+  </div>
+  
+  <!-- Skills Section -->
+  <SkillsSection skills={skills} client:visible />
+  
+  <!-- Projects Section -->
+  <ProjectsSection client:visible />
+  
+  <!-- Services Section -->
+  <ServicesSection client:visible />
+  
+  <!-- Experience Timeline -->
+  <ExperienceTimeline client:visible />
+  
+  <!-- Testimonials Section -->
+  <TestimonialsSection client:visible />
+  
+  <!-- Original Food Component -->
+  <div class="max-w-4xl mx-auto px-4 py-12">
+    <h1 class="text-3xl font-bold mb-8 text-gray-800">Food I like:</h1>
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <Food client:visible />
+    </div>
+  </div>
+  
+  <!-- API Widgets Section -->
+  <div class="max-w-4xl mx-auto px-4 py-12 grid md:grid-cols-1 gap-8">
+    <WeatherWidget client:visible />
+    <GitHubActivity client:visible />
+  </div>
+  
+  <!-- Contact Section -->
+  <ContactSection client:visible />
 </BaseLayout>
-
-
-
