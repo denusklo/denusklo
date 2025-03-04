@@ -7,29 +7,67 @@ const pageTitle = "Vue > Pinia";
 <BaseLayout pageTitle={pageTitle}>
   <div class="max-w-3xl mx-auto px-4 py-6">
     <div class="text-center mb-8">
-      <h2 class="text-3xl font-bold mb-2 text-custom-teal">Task Management App</h2>
-      <p class="text-gray-600">A feature-rich todo application built with Vue 3 and Pinia state management</p>
+      <h2 class="text-3xl font-bold mb-2 text-custom-teal">Task & Bill Management App</h2>
+      <p class="text-gray-600">A feature-rich application with Todo List and Bill Splitting capabilities built with Vue 3 and Pinia state management</p>
     </div>
     
     <div class="mb-10">
       <div id="app"></div>
     </div>
     
-    <div class="bg-theme-dark p-6 rounded-lg mt-8 text-white">
-      <h3 class="text-xl font-bold mb-4 text-custom-teal-light">Features</h3>
+    <!-- Dynamic features section -->
+    <div id="features-container" class="mt-8">
+      <!-- Todo List Features -->
+      <div id="todo-features" class="bg-theme-dark p-6 rounded-lg mb-6 text-white">
+        <h3 class="text-xl font-bold mb-4 text-custom-teal-light">Todo List Features</h3>
+        <ul class="space-y-3">
+          <li class="flex items-center">
+            <span class="text-custom-teal-light mr-2">✓</span>
+            Create, edit, and delete tasks
+          </li>
+          <li class="flex items-center">
+            <span class="text-custom-teal-light mr-2">✓</span>
+            Mark tasks as completed
+          </li>
+          <li class="flex items-center">
+            <span class="text-custom-teal-light mr-2">✓</span>
+            Filter tasks by status
+          </li>
+          <li class="flex items-center">
+            <span class="text-custom-teal-light mr-2">✓</span>
+            Clear completed tasks
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Bill Splitting Features -->
+      <div id="billsplit-features" class="bg-theme-dark p-6 rounded-lg mb-6 text-white hidden">
+        <h3 class="text-xl font-bold mb-4 text-custom-teal-light">Bill Splitting Features</h3>
+        <ul class="space-y-3">
+          <li class="flex items-center">
+            <span class="text-custom-teal-light mr-2">✓</span>
+            Add expenses and split between friends
+          </li>
+          <li class="flex items-center">
+            <span class="text-custom-teal-light mr-2">✓</span>
+            Track who paid what and who owes whom
+          </li>
+          <li class="flex items-center">
+            <span class="text-custom-teal-light mr-2">✓</span>
+            Split bills evenly or by custom amounts
+          </li>
+          <li class="flex items-center">
+            <span class="text-custom-teal-light mr-2">✓</span>
+            Calculate balances automatically
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <!-- Common Features (always visible) -->
+    <div class="bg-theme-dark p-6 rounded-lg mt-6 text-white">
+      <h3 class="text-xl font-bold mb-4 text-custom-teal-light">Common Features</h3>
       <ul class="space-y-3">
-        <li class="flex items-center">
-          <span class="text-custom-teal-light mr-2">✓</span>
-          Create, edit, and delete tasks
-        </li>
-        <li class="flex items-center">
-          <span class="text-custom-teal-light mr-2">✓</span>
-          Mark tasks as completed
-        </li>
-        <li class="flex items-center">
-          <span class="text-custom-teal-light mr-2">✓</span>
-          Filter tasks by status
-        </li>
         <li class="flex items-center">
           <span class="text-custom-teal-light mr-2">✓</span>
           Persistent storage with localStorage
@@ -38,16 +76,36 @@ const pageTitle = "Vue > Pinia";
           <span class="text-custom-teal-light mr-2">✓</span>
           Responsive design for all devices
         </li>
+        <li class="flex items-center">
+          <span class="text-custom-teal-light mr-2">✓</span>
+          Elegant UI with smooth transitions
+        </li>
       </ul>
     </div>
   </div>
 </BaseLayout>
 
-<script src="/src/scripts/todo.js"></script>
+<script src="/src/scripts/pinia-app.js"></script>
 
-<style>
-  /* Additional global styles if needed */
-  body {
-    background-color: #FFF2F2;
+<script>
+  // Listen for custom events from the Vue component
+  window.addEventListener('tabChanged', (event) => {
+    const activeTab = event.detail.activeTab;
+    showFeatures(activeTab);
+  });
+
+  function showFeatures(activeTab) {
+    const todoFeatures = document.getElementById('todo-features');
+    const billSplitFeatures = document.getElementById('billsplit-features');
+    
+    if (todoFeatures && billSplitFeatures) {
+      if (activeTab === 'todo') {
+        todoFeatures.classList.remove('hidden');
+        billSplitFeatures.classList.add('hidden');
+      } else if (activeTab === 'billsplit') {
+        todoFeatures.classList.add('hidden');
+        billSplitFeatures.classList.remove('hidden');
+      }
+    }
   }
-</style>
+</script>
