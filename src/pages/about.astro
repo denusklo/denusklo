@@ -11,6 +11,7 @@ import TestimonialsSection from "../components/vue/about/TestimonialsSection.vue
 import WeatherWidget from "../components/vue/about/WeatherWidget.vue";
 import GitHubActivity from "../components/vue/about/GitHubActivity.vue";
 import ContactSection from "../components/vue/about/ContactSection.vue";
+import { getSkillsByCategory } from '../data/skills';
 
 const pageTitle = "About Me";
 
@@ -33,6 +34,9 @@ const skills = ["HTML", "CSS", "JavaScript", "React", "Astro", "Vue", "Node.js",
 const happy = true;
 const finished = false;
 const goal = 3;
+
+const skillsByCategory = getSkillsByCategory();
+
 ---
 
 <BaseLayout pageTitle={pageTitle}>
@@ -75,7 +79,7 @@ const goal = 3;
   </div>
   
   <!-- Skills Section -->
-  <SkillsSection skills={skills} client:visible />
+  <SkillsSection skillCategories={skillsByCategory} client:visible />
   
   <!-- Projects Section -->
   <ProjectsSection client:visible />
