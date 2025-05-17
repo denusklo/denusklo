@@ -176,7 +176,7 @@
 
 <script>
 import { ref, computed, onMounted } from 'vue';
-import { useBillSplitStore } from '../../../scripts/billSplitStore.js';
+import { useBillSplitStore } from '@/scripts/billSplitStore.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export default {

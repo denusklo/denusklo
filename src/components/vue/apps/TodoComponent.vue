@@ -117,7 +117,7 @@
 
 <script>
 import { computed, ref } from "vue";
-import { useTodoStore } from "../../../scripts/todoStore.js";
+import { useTodoStore } from "@/scripts/todoStore.js";
 
 export default {
   setup() {
