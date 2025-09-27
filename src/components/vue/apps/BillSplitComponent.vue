@@ -189,7 +189,7 @@
         <div v-if="settlements.length > 0" class="space-y-2">
           <div v-for="(settlement, index) in settlements" :key="index" class="flex justify-between items-center py-1">
             <div>
-              <span class="font-medium text-black">{{ getParticipantName(settlement.from) }}</span> <span class="text-black">owes</span> 
+              <span class="font-medium text-black">{{ getParticipantName(settlement.from) }}</span> <span class="text-black">owes </span> 
               <span class="font-medium text-black">{{ getParticipantName(settlement.to) }}</span>
             </div>
             <div class="font-bold text-black">{{ formatAmount(settlement.amount, settlement.currency) }}</div>
