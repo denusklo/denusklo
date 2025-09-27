@@ -78,6 +78,7 @@ const GITHUB_USERNAME = 'denusklo'; // Replace with your actual username
 const GITHUB_PAT = import.meta.env.PUBLIC_GITHUB_PAT; // Access the env variable
 
 
+
 onMounted(() => {
   fetchData();
 });

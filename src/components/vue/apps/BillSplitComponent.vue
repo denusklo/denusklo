@@ -49,7 +49,7 @@
       <!-- Add Expense Form -->
       <div class="bg-custom-gray p-4 rounded mb-4">
         <div class="mb-3">
-          <label class="block text-sm font-medium mb-1">Description</label>
+          <label class="block text-sm font-medium mb-1 text-black">Description</label>
           <input 
             type="text" 
             v-model="newExpense.description" 
@@ -58,20 +58,34 @@
           />
         </div>
         
-        <div class="mb-3">
-          <label class="block text-sm font-medium mb-1">Amount ($)</label>
-          <input 
-            type="number" 
-            v-model="newExpense.amount" 
-            min="0" 
-            step="0.01"
-            placeholder="0.00"
-            class="w-full px-3 py-2 bg-white text-black border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-custom-teal"
-          />
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <div>
+            <label class="block text-sm font-medium mb-1 text-black">Currency</label>
+            <select
+              v-model="selectedCurrency"
+              class="w-full px-3 py-2 bg-white text-black border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-custom-teal"
+            >
+              <option value="USD">USD ($)</option>
+              <option value="VND">VND (₫)</option>
+              <option value="MYR">MYR (RM)</option>
+              <option value="SGD">SGD (S$)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1 text-black">Amount ({{ getCurrencySymbol(selectedCurrency) }})</label>
+            <input
+              type="number"
+              v-model="newExpense.amount"
+              min="0"
+              :step="selectedCurrency === 'VND' ? '1000' : '0.01'"
+              :placeholder="selectedCurrency === 'VND' ? '0' : '0.00'"
+              class="w-full px-3 py-2 bg-white text-black border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-custom-teal"
+            />
+          </div>
         </div>
         
         <div class="mb-4">
-          <label class="block text-sm font-medium mb-1">Paid by</label>
+          <label class="block text-sm font-medium mb-1 text-black">Paid by</label>
           <select 
             v-model="newExpense.paidBy" 
             class="w-full px-3 py-2 bg-white text-black border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-custom-teal"
@@ -84,7 +98,7 @@
         </div>
         
         <div class="mb-4">
-          <label class="block text-sm font-medium mb-1">Split among</label>
+          <label class="block text-sm font-medium mb-1 text-black">Split among</label>
           <div class="space-y-2">
             <div v-for="(participant, index) in participants" :key="index" class="flex items-center">
               <input 
@@ -94,7 +108,7 @@
                 :value="participant.id" 
                 class="mr-2 accent-custom-teal"
               />
-              <label :for="`split-${participant.id}`">{{ participant.name }}</label>
+              <label :for="`split-${participant.id}`" class="text-black">{{ participant.name }}</label>
             </div>
           </div>
         </div>
@@ -110,25 +124,56 @@
       
       <!-- Expenses List -->
       <div v-if="expenses.length > 0" class="space-y-3">
-        <div 
-          v-for="(expense, index) in expenses" 
+        <div
+          v-for="(expense, index) in expenses"
           :key="index"
-          class="bg-custom-gray p-3 rounded flex justify-between items-center"
+          class="relative"
         >
-          <div>
-            <div class="font-medium">{{ expense.description }}</div>
-            <div class="text-sm text-gray-600">
-              Paid by {{ getParticipantName(expense.paidBy) }} • Split among {{ expense.splitAmong.length }} people
+          <div class="bg-custom-gray p-3 rounded flex justify-between items-center">
+            <div>
+              <div class="font-medium text-black">{{ expense.description }}</div>
+              <div class="text-sm text-gray-600">
+                Paid by {{ getParticipantName(expense.paidBy) }} • Split among {{ expense.splitAmong.length }} people
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="font-bold text-black">{{ formatAmount(expense.amount, expense.currency) }}</div>
+              <button
+                @click="toggleExpenseDetails(index)"
+                class="text-custom-teal hover:text-custom-teal-light transition-colors p-1"
+                title="Show split participants"
+              >
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                </svg>
+              </button>
+              <button
+                @click="removeExpense(index)"
+                class="text-red-500 hover:text-red-700 transition-colors"
+              >
+                ×
+              </button>
             </div>
           </div>
-          <div class="flex items-center gap-4">
-            <div class="font-bold">${{ expense.amount.toFixed(2) }}</div>
-            <button 
-              @click="removeExpense(index)" 
-              class="text-red-500 hover:text-red-700 transition-colors"
-            >
-              ×
-            </button>
+
+          <!-- Expense Details Card -->
+          <div
+            v-if="expandedExpense === index"
+            class="mt-2 bg-custom-beige p-3 rounded border-l-4 border-custom-teal"
+          >
+            <h5 class="font-medium text-custom-teal mb-2">Split Participants:</h5>
+            <div class="flex flex-wrap gap-2">
+              <span
+                v-for="participantId in expense.splitAmong"
+                :key="participantId"
+                class="bg-white px-2 py-1 rounded text-sm"
+              >
+                {{ getParticipantName(participantId) }}
+              </span>
+            </div>
+            <div class="mt-2 text-sm text-gray-600">
+              Each person pays: {{ formatAmount(expense.amount / expense.splitAmong.length, expense.currency) }}
+            </div>
           </div>
         </div>
       </div>
@@ -144,10 +189,10 @@
         <div v-if="settlements.length > 0" class="space-y-2">
           <div v-for="(settlement, index) in settlements" :key="index" class="flex justify-between items-center py-1">
             <div>
-              <span class="font-medium">{{ getParticipantName(settlement.from) }}</span> owes 
-              <span class="font-medium">{{ getParticipantName(settlement.to) }}</span>
+              <span class="font-medium text-black">{{ getParticipantName(settlement.from) }}</span> <span class="text-black">owes</span> 
+              <span class="font-medium text-black">{{ getParticipantName(settlement.to) }}</span>
             </div>
-            <div class="font-bold">${{ settlement.amount.toFixed(2) }}</div>
+            <div class="font-bold text-black">{{ formatAmount(settlement.amount, settlement.currency) }}</div>
           </div>
         </div>
         <div v-else class="text-center text-gray-500">
@@ -188,12 +233,22 @@ export default {
     const expenses = ref([]);
     const settlements = ref([]);
     const newParticipant = ref('');
+    const selectedCurrency = ref('USD');
+    const expandedExpense = ref(null);
     const newExpense = ref({
       description: '',
       amount: '',
       paidBy: '',
       splitAmong: []
     });
+
+    // Currency configuration
+    const currencies = {
+      USD: { symbol: '$', name: 'USD' },
+      VND: { symbol: '₫', name: 'VND' },
+      MYR: { symbol: 'RM', name: 'MYR' },
+      SGD: { symbol: 'S$', name: 'SGD' }
+    };
     
     // Load data from store
     onMounted(() => {
@@ -262,6 +317,7 @@ export default {
           id: uuidv4(),
           description: newExpense.value.description,
           amount: parseFloat(newExpense.value.amount),
+          currency: selectedCurrency.value,
           paidBy: newExpense.value.paidBy,
           splitAmong: [...newExpense.value.splitAmong],
           date: new Date()
@@ -322,45 +378,70 @@ export default {
       
       // Convert balances to settlements
       settlements.value = [];
-      
-      // Create a list of people who owe money (negative balance) and people who are owed money (positive balance)
-      let debtors = [];
-      let creditors = [];
-      
-      Object.entries(balances).forEach(([id, balance]) => {
-        if (balance < -0.01) { // Small epsilon to handle floating point errors
-          debtors.push({ id, balance: Math.abs(balance) });
-        } else if (balance > 0.01) {
-          creditors.push({ id, balance });
+
+      // Group expenses by currency for proper settlement calculation
+      const expensesByCurrency = {};
+      expenses.value.forEach(expense => {
+        if (!expensesByCurrency[expense.currency]) {
+          expensesByCurrency[expense.currency] = [];
+        }
+        expensesByCurrency[expense.currency].push(expense);
+      });
+
+      // Calculate settlements for each currency separately
+      Object.entries(expensesByCurrency).forEach(([currency, currencyExpenses]) => {
+        const currencyBalances = {};
+        participants.value.forEach(p => {
+          currencyBalances[p.id] = 0;
+        });
+
+        // Calculate balances for this currency
+        currencyExpenses.forEach(expense => {
+          if (!expense.paidBy || expense.splitAmong.length === 0) return;
+
+          currencyBalances[expense.paidBy] += expense.amount;
+          const shareAmount = expense.amount / expense.splitAmong.length;
+          expense.splitAmong.forEach(participantId => {
+            currencyBalances[participantId] -= shareAmount;
+          });
+        });
+
+        // Create settlements for this currency
+        let debtors = [];
+        let creditors = [];
+
+        Object.entries(currencyBalances).forEach(([id, balance]) => {
+          if (balance < -0.01) {
+            debtors.push({ id, balance: Math.abs(balance) });
+          } else if (balance > 0.01) {
+            creditors.push({ id, balance });
+          }
+        });
+
+        debtors.sort((a, b) => b.balance - a.balance);
+        creditors.sort((a, b) => b.balance - a.balance);
+
+        while (debtors.length > 0 && creditors.length > 0) {
+          const debtor = debtors[0];
+          const creditor = creditors[0];
+          const amount = Math.min(debtor.balance, creditor.balance);
+
+          if (amount > 0.01) {
+            settlements.value.push({
+              from: debtor.id,
+              to: creditor.id,
+              amount,
+              currency
+            });
+          }
+
+          debtor.balance -= amount;
+          creditor.balance -= amount;
+
+          if (debtor.balance < 0.01) debtors.shift();
+          if (creditor.balance < 0.01) creditors.shift();
         }
       });
-      
-      // Sort both lists by amount (largest first)
-      debtors.sort((a, b) => b.balance - a.balance);
-      creditors.sort((a, b) => b.balance - a.balance);
-      
-      // Create settlements by matching debtors with creditors
-      while (debtors.length > 0 && creditors.length > 0) {
-        const debtor = debtors[0];
-        const creditor = creditors[0];
-        
-        const amount = Math.min(debtor.balance, creditor.balance);
-        
-        if (amount > 0.01) { // Only add non-zero settlements
-          settlements.value.push({
-            from: debtor.id,
-            to: creditor.id,
-            amount
-          });
-        }
-        
-        // Update balances and remove settled people
-        debtor.balance -= amount;
-        creditor.balance -= amount;
-        
-        if (debtor.balance < 0.01) debtors.shift();
-        if (creditor.balance < 0.01) creditors.shift();
-      }
     };
     
     const reset = () => {
@@ -375,6 +456,7 @@ export default {
         
         // Reset the form
         newParticipant.value = '';
+        selectedCurrency.value = 'USD';
         newExpense.value = {
           description: '',
           amount: '',
@@ -384,12 +466,31 @@ export default {
       }
     };
     
+    // Helper methods
+    const getCurrencySymbol = (currencyCode) => {
+      return currencies[currencyCode]?.symbol || '$';
+    };
+
+    const formatAmount = (amount, currency) => {
+      const symbol = getCurrencySymbol(currency);
+      if (currency === 'VND') {
+        return `${symbol}${Math.round(amount).toLocaleString()}`;
+      }
+      return `${symbol}${amount.toFixed(2)}`;
+    };
+
+    const toggleExpenseDetails = (index) => {
+      expandedExpense.value = expandedExpense.value === index ? null : index;
+    };
+
     return {
       participants,
       expenses,
       settlements,
       newParticipant,
       newExpense,
+      selectedCurrency,
+      expandedExpense,
       canAddExpense,
       addParticipant,
       removeParticipant,
@@ -397,6 +498,9 @@ export default {
       removeExpense,
       getParticipantName,
       calculateSettlements,
+      getCurrencySymbol,
+      formatAmount,
+      toggleExpenseDetails,
       reset
     };
   }

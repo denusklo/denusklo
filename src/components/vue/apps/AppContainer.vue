@@ -39,7 +39,7 @@ export default {
     BillSplitComponent
   },
   setup() {
-    const currentTab = ref("todo");
+    const currentTab = ref("billsplit");
 
     const switchTab = (tab) => {
       currentTab.value = tab;
