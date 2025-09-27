@@ -166,7 +166,7 @@
               <span
                 v-for="participantId in expense.splitAmong"
                 :key="participantId"
-                class="bg-white px-2 py-1 rounded text-sm"
+                class="bg-white px-2 py-1 rounded text-sm text-black"
               >
                 {{ getParticipantName(participantId) }}
               </span>
