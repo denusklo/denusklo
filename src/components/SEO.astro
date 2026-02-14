@@ -47,13 +47,15 @@ const {
   schema,
 } = Astro.props;
 
+// SEO: Site URL configuration (must match astro.config.mjs)
+const configuredSite = 'https://www.denusklo.com';
+
 // Get current page URL for OG if not provided
-const currentURL = canonicalURL || Astro.url?.href || 'https://denusklo.com';
+const currentURL = canonicalURL || Astro.url?.href || configuredSite;
 
 // SEO: Convert relative image paths to absolute URLs for social media
-// Twitter/X and Facebook require absolute URLs to fetch images
-const siteURL = 'https://denusklo.com';
-const absoluteImage = image.startsWith('http') ? image : `${siteURL}${image}`;
+// Use the configured site URL from astro.config.mjs to ensure consistency
+const absoluteImage = image.startsWith('http') ? image : `${configuredSite}${image}`;
 ---
 
 <!-- Canonical URL - prevents duplicate content issues -->

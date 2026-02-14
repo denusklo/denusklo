@@ -9,4 +9,4 @@ Allow: /
 # Disallow: /private/
 
 # Sitemap location - helps crawlers find all your pages
-Sitemap: https://denusklo.com/sitemap-index.xml
+Sitemap: https://www.denusklo.com/sitemap-index.xml

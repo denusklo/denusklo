@@ -8,7 +8,7 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
   // SEO: Your site URL is required for sitemap generation and canonical URLs
-  site: 'https://denusklo.com',
+  site: 'https://www.denusklo.com',
   integrations: [
     tailwind(),
     vue(),
