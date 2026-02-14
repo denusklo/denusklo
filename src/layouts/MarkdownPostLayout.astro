@@ -1,8 +1,39 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import StructuredData from '../components/StructuredData.astro';
+
 const { frontmatter } = Astro.props;
+
+// Article schema for blog posts - helps Google show rich results
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: frontmatter.title,
+  description: frontmatter.description,
+  image: frontmatter.image?.url,
+  datePublished: frontmatter.pubDate,
+  author: {
+    '@type': 'Person',
+    name: 'Den Kong',
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Den Kong Portfolio',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://denusklo.com/og-image.jpg',
+    },
+  },
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': `https://denusklo.com${Astro.url.pathname}`,
+  },
+};
 ---
 <BaseLayout pageTitle={frontmatter.title}>
+  <!-- Article schema for rich results -->
+  <StructuredData data={articleSchema} />
+
   <p>{frontmatter.pubDate.slice(0,10)}</p>
   <p><em>{frontmatter.description}</em></p>
   <p>Written by: {frontmatter.author}</p>

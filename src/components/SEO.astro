@@ -34,7 +34,7 @@ interface Props {
 const {
   title = 'Den Kong',
   description = 'Den Kong\'s portfolio website - Laravel fullstack developer from Malaysia',
-  image = '/og-image.jpg', // You'll create this
+  image = '/og-image.jpg',
   canonicalURL,
   ogType = 'website',
   ogTitle = title,
@@ -49,6 +49,11 @@ const {
 
 // Get current page URL for OG if not provided
 const currentURL = canonicalURL || Astro.url?.href || 'https://denusklo.com';
+
+// SEO: Convert relative image paths to absolute URLs for social media
+// Twitter/X and Facebook require absolute URLs to fetch images
+const siteURL = 'https://denusklo.com';
+const absoluteImage = image.startsWith('http') ? image : `${siteURL}${image}`;
 ---
 
 <!-- Canonical URL - prevents duplicate content issues -->
@@ -57,16 +62,19 @@ const currentURL = canonicalURL || Astro.url?.href || 'https://denusklo.com';
 <!-- Open Graph Tags - for Facebook, LinkedIn, etc. -->
 <meta property="og:title" content={ogTitle} />
 <meta property="og:description" content={ogDescription} />
-<meta property="og:image" content={ogImage} />
+<meta property="og:image" content={ogImage.startsWith('http') ? ogImage : absoluteImage} />
 <meta property="og:url" content={currentURL} />
 <meta property="og:type" content={ogType} />
 <meta property="og:site_name" content="Den Kong" />
+<!-- Facebook App ID (optional - for Facebook Insights analytics) -->
+<!-- To remove warning, create app at: https://developers.facebook.com/apps/ -->
+<meta property="fb:app_id" content="placeholder" />
 
 <!-- Twitter Card Tags - for Twitter/X -->
 <meta name="twitter:card" content={twitterCard} />
 <meta name="twitter:title" content={twitterTitle} />
 <meta name="twitter:description" content={twitterDescription} />
-<meta name="twitter:image" content={twitterImage} />
+<meta name="twitter:image" content={twitterImage.startsWith('http') ? twitterImage : absoluteImage} />
 
 <!-- Structured Data (JSON-LD) - helps Google understand your content -->
 {schema && (
