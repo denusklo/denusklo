@@ -1,0 +1,77 @@
+---
+/**
+ * Structured Data Component - JSON-LD Schema Markup
+ *
+ * SEO Concept: JSON-LD is a JavaScript notation that connects data on the web.
+ * It helps search engines understand the context and meaning of your content.
+ *
+ * Learn more: https://schema.org/
+ * Testing: https://search.google.com/test/rich-results
+ */
+
+interface Props {
+  type?: 'Person' | 'WebSite' | 'Article' | 'BreadcrumbList';
+  data?: Record<string, any>;
+}
+
+const { type = 'Person', data } = Astro.props;
+
+// Default Person schema for portfolio
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Den Kong',
+  jobTitle: 'Full Stack Developer',
+  url: 'https://denusklo.com',
+  sameAs: [
+    // Add your social profiles here
+    // 'https://github.com/yourusername',
+    // 'https://linkedin.com/in/yourusername',
+    // 'https://twitter.com/yourusername',
+  ],
+  description: 'Laravel fullstack developer from Malaysia specializing in modern web development',
+  knowsAbout: [
+    'Laravel',
+    'Vue.js',
+    'Astro',
+    'Tailwind CSS',
+    'PHP',
+    'JavaScript',
+    'Full Stack Development',
+  ],
+  worksFor: {
+    '@type': 'Organization',
+    name: 'Freelance',
+  },
+  address: {
+    '@type': 'PostalAddress',
+    addressCountry: 'Malaysia',
+  },
+};
+
+// WebSite schema
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Den Kong',
+  url: 'https://denusklo.com',
+  description: 'Den Kong\'s portfolio website - Laravel fullstack developer from Malaysia',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: 'https://denusklo.com/search?q={search_term_string}',
+    },
+    'query-input': 'required name=search_term_string',
+  },
+};
+
+const schemas = {
+  Person: personSchema,
+  WebSite: websiteSchema,
+};
+
+const schemaData = data || schemas[type];
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schemaData)} />

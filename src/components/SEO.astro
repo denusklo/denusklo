@@ -1,0 +1,74 @@
+---
+/**
+ * SEO Component - Handles all meta tags for search engines and social media
+ *
+ * SEO Concept: Open Graph (OG) tags control how your content appears when shared
+ * on social platforms like Facebook, LinkedIn, etc.
+ *
+ * SEO Concept: Twitter Cards are similar but Twitter-specific with more options
+ */
+
+interface Props {
+  // Basic SEO
+  title?: string;
+  description?: string;
+  image?: string;
+  canonicalURL?: string;
+
+  // Open Graph
+  ogType?: 'website' | 'article';
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+
+  // Twitter Card
+  twitterCard?: 'summary' | 'summary_large_image';
+  twitterTitle?: string;
+  twitterDescription?: string;
+  twitterImage?: string;
+
+  // Structured Data (JSON-LD)
+  schema?: Record<string, any>;
+}
+
+const {
+  title = 'Den Kong',
+  description = 'Den Kong\'s portfolio website - Laravel fullstack developer from Malaysia',
+  image = '/og-image.jpg', // You'll create this
+  canonicalURL,
+  ogType = 'website',
+  ogTitle = title,
+  ogDescription = description,
+  ogImage = image,
+  twitterCard = 'summary_large_image',
+  twitterTitle = ogTitle,
+  twitterDescription = ogDescription,
+  twitterImage = ogImage,
+  schema,
+} = Astro.props;
+
+// Get current page URL for OG if not provided
+const currentURL = canonicalURL || Astro.url?.href || 'https://denusklo.com';
+---
+
+<!-- Canonical URL - prevents duplicate content issues -->
+<link rel="canonical" href={canonicalURL || currentURL} />
+
+<!-- Open Graph Tags - for Facebook, LinkedIn, etc. -->
+<meta property="og:title" content={ogTitle} />
+<meta property="og:description" content={ogDescription} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:url" content={currentURL} />
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content="Den Kong" />
+
+<!-- Twitter Card Tags - for Twitter/X -->
+<meta name="twitter:card" content={twitterCard} />
+<meta name="twitter:title" content={twitterTitle} />
+<meta name="twitter:description" content={twitterDescription} />
+<meta name="twitter:image" content={twitterImage} />
+
+<!-- Structured Data (JSON-LD) - helps Google understand your content -->
+{schema && (
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+)}

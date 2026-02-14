@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OG Image Generator - denusklo.com</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Work Sans', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: #f3f4f6;
+      padding: 20px;
+    }
+    .canvas-container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    canvas {
+      border: 1px solid #e5e7eb;
+      display: block;
+    }
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-download {
+      background: #000;
+      color: white;
+    }
+    .btn-download:hover {
+      background: #333;
+      transform: translateY(-2px);
+    }
+    .info {
+      text-align: center;
+      color: #6b7280;
+      font-size: 14px;
+      margin-top: 20px;
+      max-width: 600px;
+    }
+  </style>
+</head>
+<body>
+  <div class="canvas-container">
+    <canvas id="ogCanvas" width="1200" height="630"></canvas>
+  </div>
+
+  <div class="controls">
+    <button class="btn-download" id="downloadBtn">📥 Download OG Image</button>
+  </div>
+
+  <p class="info">
+    <strong>What is this?</strong> This generates an Open Graph image (1200x630px) for your website.<br>
+    When someone shares your site on social media, this image appears as a preview.<br>
+    <br>
+    <em>Click "Download" to save the image as <code>og-image.jpg</code>, then upload to your <code>public/</code> folder.</em>
+  </p>
+
+  <script>
+    const canvas = document.getElementById('ogCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Draw the OG image
+    function drawOGImage() {
+      // Background gradient
+      const gradient = ctx.createLinearGradient(0, 0, 1200, 630);
+      gradient.addColorStop(0, '#1a1a2e');
+      gradient.addColorStop(0.5, '#16213e');
+      gradient.addColorStop(1, '#0f3460');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 1200, 630);
+
+      // Decorative circles
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+      ctx.beginPath();
+      ctx.arc(1000, 100, 200, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.02)';
+      ctx.beginPath();
+      ctx.arc(200, 500, 250, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Large emoji watermark (like your favicon 🪡)
+      ctx.font = '300px serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('🪡', 1050, 480);
+
+      // Main text
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 64px Work Sans, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('Den Kong', 100, 250);
+
+      // Subtitle
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '500 32px Work Sans, sans-serif';
+      ctx.fillText('Full Stack Developer', 100, 320);
+
+      // Skills/tech stack
+      ctx.fillStyle = '#cbd5e1';
+      ctx.font = '400 24px Work Sans, sans-serif';
+      ctx.fillText('Laravel • Vue.js • Astro • Tailwind CSS', 100, 380);
+
+      // Location
+      ctx.fillStyle = '#64748b';
+      ctx.font = '400 20px Work Sans, sans-serif';
+      ctx.fillText('🇲🇾 Malaysia', 100, 440);
+
+      // URL at bottom
+      ctx.fillStyle = '#3b82f6';
+      ctx.font = '600 28px Work Sans, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText('denusklo.com', 1100, 580);
+
+      // Border
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(20, 20, 1160, 590);
+    }
+
+    // Download the image
+    document.getElementById('downloadBtn').addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.download = 'og-image.jpg';
+      link.href = canvas.toDataURL('image/jpeg', 0.9);
+      link.click();
+    });
+
+    // Draw on load
+    drawOGImage();
+  </script>
+</body>
+</html>
