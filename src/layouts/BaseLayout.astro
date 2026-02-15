@@ -40,17 +40,72 @@ const fullTitle = pageTitle ? `${pageTitle} | Den Kong` : 'Den Kong';
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body class="min-h-screen bg-gray-50 dark:bg-gray-900 dark:text-white font-worksans">
+    <!-- Global Mouse Glow Effect -->
+    <div
+      id="global-mouse-glow"
+      class="mouse-glow fixed rounded-full blur-3xl opacity-30 pointer-events-none z-50 bg-purple-500 hidden md:block"
+      style="width: 400px; height: 400px; transform: translate(-50%, -50%); will-change: left, top;"
+    ></div>
+
     <div class="flex flex-col min-h-screen max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <Header />
-      
+
       <main class="flex-grow py-8">
         <h1 class="text-4xl font-bold mb-8">{pageTitle}</h1>
         <slot />
       </main>
-      
+
       <Footer />
     </div>
     
+    <!-- Global Mouse Glow Script -->
+    <script>
+      (function() {
+        const mouseGlow = document.getElementById('global-mouse-glow');
+        if (!mouseGlow) return;
+
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let currentX = mouseX;
+        let currentY = mouseY;
+        let animationFrameId = null;
+
+        // Track mouse position
+        document.addEventListener('mousemove', (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+        });
+
+        // Smooth animation loop
+        function animate() {
+          // Lerp for smooth following
+          const ease = 0.1;
+          currentX += (mouseX - currentX) * ease;
+          currentY += (mouseY - currentY) * ease;
+
+          mouseGlow.style.left = currentX + 'px';
+          mouseGlow.style.top = currentY + 'px';
+
+          animationFrameId = requestAnimationFrame(animate);
+        }
+
+        // Start animation
+        animate();
+
+        // Cleanup on navigation
+        document.addEventListener('astro:page-load', () => {
+          if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+          }
+          const newGlow = document.getElementById('global-mouse-glow');
+          if (newGlow) {
+            newGlow.style.left = currentX + 'px';
+            newGlow.style.top = currentY + 'px';
+          }
+        });
+      })();
+    </script>
+
     <!-- This script enables view transitions if you decide to use them -->
     <script>
       document.addEventListener('astro:page-load', () => {
