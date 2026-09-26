@@ -3,13 +3,20 @@
 // Source as pasted by Den on 27 Sep 2026. Rare UI licence: MIT + Commons Clause + attribution.
 // Keep this React component in React (no porting to other frameworks); visible credit to rareui.com required.
 // modified: rectangular fill, site palette
+// modified: colour props (base, mid, color)
 'use client'
 
 import React, { useEffect, useRef } from 'react'
 
 export type FluidFieldProps = React.ComponentProps<'div'> & {
+  /** Top of the ramp. */
   color?: string
+  /** Bottom of the ramp. */
   base?: string
+  /** Middle band; defaults to halfway between base and color, as in the original. */
+  mid?: string
+  /** smoothstep edges of the top band; raise them to shrink how much of the box reaches `color`. */
+  highlight?: [number, number]
   /** Seconds added to the shader clock, so several fields on one page don't move in lockstep. */
   timeOffset?: number
 }
@@ -32,6 +39,8 @@ uniform vec2 u_resolution;
 uniform float u_time;
 uniform vec3 u_color;
 uniform vec3 u_base;
+uniform vec3 u_mid;
+uniform vec2 u_highlight;
 
 float hash(vec2 p) {
   return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
@@ -79,12 +88,12 @@ void main() {
   float anchor = smoothstep(0.0, 0.3, uv.y);
   float shade = clamp(g + (f - 0.5) * 0.8 * anchor, 0.0, 1.0);
 
-  vec3 light = mix(u_base, u_color, 0.5);
+  vec3 light = u_mid;
   vec3 dark = u_color;
 
   vec3 col = u_base;
   col = mix(col, light, smoothstep(0.28, 0.52, shade));
-  col = mix(col, dark, smoothstep(0.58, 0.88, shade));
+  col = mix(col, dark, smoothstep(u_highlight.x, u_highlight.y, shade));
 
   gl_FragColor = vec4(col, 1.0);
 }
@@ -116,6 +125,8 @@ function compile(gl: WebGLRenderingContext, type: number, src: string) {
 const FluidField = ({
   color = '#4B47FF',
   base = '#23232B',
+  mid,
+  highlight = [0.58, 0.88],
   timeOffset = 0,
   className,
   style,
@@ -162,6 +173,10 @@ const FluidField = ({
     const uTime = gl.getUniformLocation(program, 'u_time')
     gl.uniform3f(gl.getUniformLocation(program, 'u_color'), ...hexToRgb(color))
     gl.uniform3f(gl.getUniformLocation(program, 'u_base'), ...hexToRgb(base))
+    const baseRgb = hexToRgb(base), colorRgb = hexToRgb(color)
+    const midRgb = mid ? hexToRgb(mid) : baseRgb.map((c, i) => (c + colorRgb[i]) / 2) as [number, number, number]
+    gl.uniform3f(gl.getUniformLocation(program, 'u_mid'), ...midRgb)
+    gl.uniform2f(gl.getUniformLocation(program, 'u_highlight'), highlight[0], highlight[1])
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     // Elapsed time only advances while running, so a pause doesn't jump the fluid.
@@ -222,7 +237,7 @@ const FluidField = ({
       gl.deleteShader(frag)
       gl.deleteBuffer(buffer)
     }
-  }, [color, base, timeOffset])
+  }, [color, base, mid, highlight[0], highlight[1], timeOffset])
 
   return (
     <div
