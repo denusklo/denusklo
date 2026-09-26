@@ -1,10 +1,10 @@
 ---
 const navItems = [
-  { text: "Home", href: "/" },
-  { text: "About", href: "/about" },
-  // { text: "Blog", href: "/blog" },
-  // { text: "Tags", href: "/tags" },
-  { text: "Vue", href: "/vue" }
+  { text: "Home", href: "/v1" },
+  { text: "About", href: "/v1/about" },
+  // { text: "Blog", href: "/v1/blog" },
+  // { text: "Tags", href: "/v1/tags" },
+  { text: "Vue", href: "/v1/vue" }
 ];
 
 const currentPath = Astro.url.pathname;
@@ -13,7 +13,7 @@ const currentPath = Astro.url.pathname;
 <nav class="flex flex-col md:flex-row md:gap-6">
   {navItems.map(item => {
     const isActive = currentPath === item.href || 
-                    (item.href !== '/' && currentPath.startsWith(item.href));
+                    (item.href !== '/v1' && currentPath.startsWith(item.href));
     
     return (
       <a 

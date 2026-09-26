@@ -1,6 +1,6 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Draggable from '../../components/vue/draggable.vue';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Draggable from '../../../components/vue/draggable.vue';
 
 const pageTitle = "Vue";
 ---
@@ -10,14 +10,14 @@ const pageTitle = "Vue";
   <div id="app"></div>
   
   <div class="mt-10">
-    <a href="/vue/pinia" style="color: #17b8fe;">Pinia Playground</a>
+    <a href="/v1/vue/pinia" style="color: #17b8fe;">Pinia Playground</a>
   </div>
 </BaseLayout>
 
 
 <script>
 import { createApp } from 'vue';
-import App from '../../components/vue/app.vue';
+import App from '../../../components/vue/app.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import { createPinia } from 'pinia'
 
