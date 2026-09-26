@@ -2,6 +2,7 @@ import { defineConfig } from 'astro/config';
 import tailwind from "@astrojs/tailwind";
 import vue from "@astrojs/vue";
 import preact from '@astrojs/preact';
+import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 
 
@@ -16,6 +17,9 @@ export default defineConfig({
     preact({
       include: ['**/preact/*', 'src/components/preact/*'],
     }),
+    // @astrojs/react 2.x has no include option; src/components/react/* files opt in with a
+    // `@jsxImportSource react` pragma, while tsconfig keeps Preact as the default JSX source.
+    react(),
     // SEO: Automatically generates sitemap.xml at build time
     sitemap(),
   ]

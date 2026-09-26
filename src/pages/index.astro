@@ -3,6 +3,7 @@ import PortfolioLayout from '@/layouts/PortfolioLayout.astro';
 import { contributions } from '@/data/contributions';
 import ContactCta from '@/components/ContactCta.astro';
 import ScrollProgress from '@/components/ScrollProgress.astro';
+import FluidField from '@/components/react/FluidField';
 import '@/styles/portfolio-home.css';
 ---
 <PortfolioLayout
@@ -32,7 +33,7 @@ import '@/styles/portfolio-home.css';
       <section class="also content" id="also-built" data-section="Also built" aria-label="Also built">
         <div class="section-head"><h2>ALSO BUILT</h2></div>
         <div class="secondary-grid">
-          <article class="secondary-card"><div class="placeholder-still">STATIC STILL — NO DEMO</div><div class="secondary-copy"><h3>gall_2</h3><p>A photo gallery with albums and cloud uploads, plus a board where people post requests and others complete them.</p><p class="reason">Built for learning: one full Laravel and Vue app, end to end.</p><small>LARAVEL · VUE · MYSQL · SUPABASE · FIREBASE</small><a href="https://gall-2.vercel.app">gall-2.vercel.app ↗</a></div></article>
+          <article class="secondary-card"><div class="placeholder-still fluid-slot"><FluidField client:visible /></div><div class="secondary-copy"><h3>gall_2</h3><p>A photo gallery with albums and cloud uploads, plus a board where people post requests and others complete them.</p><p class="reason">Built for learning: one full Laravel and Vue app, end to end.</p><small>LARAVEL · VUE · MYSQL · SUPABASE · FIREBASE</small><a href="https://gall-2.vercel.app">gall-2.vercel.app ↗</a></div></article>
           <article class="secondary-card"><div class="placeholder-still">STATIC STILL — NO DEMO</div><div class="secondary-copy"><h3>Open Source</h3><p>Pull requests to repos I actually use.</p><p class="reason">Reading other people's code is faster than reading tutorials.</p><small>GIT · CODE REVIEW · PYTHON</small><a href="#contributions">Each one broken out below ↓</a></div></article>
         </div>
       </section>
@@ -45,7 +46,7 @@ import '@/styles/portfolio-home.css';
     </main>
     <footer class="foot content" id="contact" data-section="Contact">
       <div class="waterfall" id="waterfall" aria-hidden="true"><div class="waterfall-set set-a"></div><div class="waterfall-set set-b"></div></div>
-      <div class="foot-columns"><div><h2>CONTACT</h2><a class="email" href="mailto:denusklo@gmail.com">denusklo@gmail.com</a><p>Email is the fastest way to reach me.</p></div><div><h2>CODE</h2><a href="https://github.com/denusklo">github.com/denusklo ↗</a><p>Source for everything on this page.</p></div><div><h2>COLOPHON</h2><p>Inter, one weight axis.<br>A fixed grid with generous margins.<br>Ultramarine and white after M-03.</p></div><div><h2>THIS PAGE</h2><p>Personal portfolio.<br>Not a landing page. No pitch, no funnel.<br>Built by the person who built the projects.</p></div></div>
+      <div class="foot-columns"><div><h2>CONTACT</h2><a class="email" href="mailto:denusklo@gmail.com">denusklo@gmail.com</a><p>Email is the fastest way to reach me.</p></div><div><h2>CODE</h2><a href="https://github.com/denusklo">github.com/denusklo ↗</a><p>Source for everything on this page.</p></div><div><h2>COLOPHON</h2><p>Inter, one weight axis.<br>A fixed grid with generous margins.<br>Ultramarine and white after M-03.<br><a href="https://www.rareui.com">Fluid by Rare UI ↗</a></p></div><div><h2>THIS PAGE</h2><p>Personal portfolio.<br>Not a landing page. No pitch, no funnel.<br>Built by the person who built the projects.</p></div></div>
       <ContactCta />
       <div class="baseline"><span>DEN<a href="/v1">PREVIOUS SITE →</a></span><span>ULTRAMARINE · VIDEO GROUND</span></div>
     </footer>
@@ -58,6 +59,7 @@ import '@/styles/portfolio-home.css';
 
 <style is:global>
   .foot > .cta { margin-top: 35px; }
+  .fluid-slot { position: relative; overflow: hidden; }
   .baseline a { margin-left: 24px; text-decoration: none; }
   .baseline a:focus-visible { outline: 1px solid #8A87FF; outline-offset: 3px; }
   .contribution code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .92em; }
