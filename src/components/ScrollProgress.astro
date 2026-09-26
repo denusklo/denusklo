@@ -59,10 +59,6 @@
     addEventListener('resize', schedule);
     update();
 
-    // Step aside when the foot baseline is on screen so it never covers the CTA or baseline.
-    const baseline = document.querySelector('.baseline');
-    if (baseline) new IntersectionObserver(([entry]) => root.classList.toggle('is-away', entry.isIntersecting)).observe(baseline);
-
     const setOpen = (open: boolean, refocus = true) => {
       list.hidden = !open;
       trigger.setAttribute('aria-expanded', String(open));
@@ -81,9 +77,11 @@
 
 <style is:global>
   [data-section]{scroll-margin-top:82px}
+  /* Room below the foot baseline for the indicator at max scroll: its 36px height + 32px offset + 24px. */
+  .baseline{margin-bottom:92px}
   .sp{position:fixed;z-index:20;left:50%;bottom:32px;transform:translateX(-50%);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .4s ease,visibility .4s}
   .sp.is-ready{opacity:1;visibility:visible;pointer-events:auto}
-  .nav:not(.is-visible)~.sp,.sp.is-away{opacity:0;visibility:hidden;pointer-events:none}
+  .nav:not(.is-visible)~.sp{opacity:0;visibility:hidden;pointer-events:none}
   .sp-trigger{position:relative;display:block;min-width:180px;height:36px;padding:0 18px;overflow:hidden;background:#1A1A20;border:1px solid #2C2C36;border-radius:3px;color:#EDEDF2;font:inherit;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
   .sp-labels{display:grid;justify-items:center}
   .sp-labels span{grid-area:1/1;white-space:nowrap;opacity:0;transition:opacity .2s ease}

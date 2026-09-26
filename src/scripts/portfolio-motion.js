@@ -99,7 +99,8 @@
     raf = 0;
     if (smoothScrolling) {
       const remaining = targetScroll - scrollY;
-      if (Math.abs(remaining) < .6) {
+      // Snap once a step would be under half a pixel: scroll positions round, so the lerp would stall a few px short.
+      if (Math.abs(remaining * .13) < .5) {
         settingScroll = true;
         scrollTo({ top: targetScroll, behavior: 'instant' });
         settingScroll = false;
