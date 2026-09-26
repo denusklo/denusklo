@@ -30,13 +30,13 @@ import '@/styles/portfolio-home.css';
         <div class="section-head"><h2>ALSO BUILT</h2><span>STATIC BY DESIGN</span></div>
         <div class="secondary-grid">
           <article class="secondary-card"><div class="placeholder-still">STATIC STILL — NO DEMO</div><div class="secondary-copy"><h3>gall_2</h3><p>Indexes a local photo folder and serves it as a browsable gallery.</p><p class="reason">Built to learn file handling and static serving without a framework doing it for me.</p><small>PYTHON · FLASK · SQLITE</small></div></article>
-          <article class="secondary-card"><div class="placeholder-still">STATIC STILL — NO DEMO</div><div class="secondary-copy"><h3>Open Source</h3><p>Pull requests merged into repos I actually use.</p><p class="reason">Reading other people's code is faster than reading tutorials.</p><small>GIT · CODE REVIEW · PYTHON</small><a href="#contributions">Each one broken out below ↓</a></div></article>
+          <article class="secondary-card"><div class="placeholder-still">STATIC STILL — NO DEMO</div><div class="secondary-copy"><h3>Open Source</h3><p>Pull requests to repos I actually use.</p><p class="reason">Reading other people's code is faster than reading tutorials.</p><small>GIT · CODE REVIEW · PYTHON</small><a href="#contributions">Each one broken out below ↓</a></div></article>
         </div>
       </section>
       <section class="contributions content" id="contributions" aria-label="Open-source contributions">
         <div class="section-head"><h2>WHAT IS IN EACH CONTRIBUTION</h2><a href="https://github.com/denusklo">GITHUB.COM/DENUSKLO ↗</a></div>
         {contributions.map(c => (
-          <div class="contribution"><div><strong>{c.repo}</strong><small>{c.language}</small></div><div><p>{c.change.split('`').map((part, i) => i % 2 ? <code>{part}</code> : part)}</p><p>{c.why}</p></div><div class="contribution-meta"><span>{c.status}</span><small>{c.date}</small><a href={c.url}>view PR ↗</a></div></div>
+          <div class="contribution"><div><strong>{c.repo}</strong><small>{c.language}</small></div><div><p>{c.change.split('`').map((part, i) => i % 2 ? <code>{part}</code> : part)}</p>{c.why && <p>{c.why}</p>}</div><div class="contribution-meta"><span>{c.status}</span><small>{c.date}</small><a href={c.url}>view PR ↗</a></div></div>
         ))}
       </section>
     </main>
