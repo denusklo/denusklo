@@ -77,8 +77,9 @@
 
 <style is:global>
   [data-section]{scroll-margin-top:82px}
-  /* Room below the foot baseline for the indicator at max scroll: its 36px height + 32px offset + 24px. */
-  .baseline{margin-bottom:92px}
+  /* Room below the foot baseline for the indicator at max scroll: its 36px height + 32px offset + 24px.
+     Padding, not margin: a margin collapses out through the home foot and is lost to its min-height. */
+  .baseline{padding-bottom:92px}
   .sp{position:fixed;z-index:20;left:50%;bottom:32px;transform:translateX(-50%);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .4s ease,visibility .4s}
   .sp.is-ready{opacity:1;visibility:visible;pointer-events:auto}
   .nav:not(.is-visible)~.sp{opacity:0;visibility:hidden;pointer-events:none}
