@@ -4,6 +4,7 @@ import { contributions } from '@/data/contributions';
 import ContactCta from '@/components/ContactCta.astro';
 import ScrollProgress from '@/components/ScrollProgress.astro';
 import FluidField from '@/components/react/FluidField';
+import ReferenceCredits from '@/components/ReferenceCredits.astro';
 import '@/styles/portfolio-home.css';
 ---
 <PortfolioLayout
@@ -46,7 +47,7 @@ import '@/styles/portfolio-home.css';
     </main>
     <footer class="foot content" id="contact" data-section="Contact">
       <div class="waterfall" id="waterfall" aria-hidden="true"><div class="waterfall-set set-a"></div><div class="waterfall-set set-b"></div></div>
-      <div class="foot-columns"><div><h2>CONTACT</h2><a class="email" href="mailto:denusklo@gmail.com">denusklo@gmail.com</a><p>Email is the fastest way to reach me.</p></div><div><h2>CODE</h2><a href="https://github.com/denusklo">github.com/denusklo ↗</a><p>Source for everything on this page.</p></div><div><h2>COLOPHON</h2><p>Inter, one weight axis.<br>A fixed grid with generous margins.<br>Ultramarine on near-black, one accent colour.<br><a href="https://www.rareui.com">Fluid by Rare UI ↗</a></p></div><div><h2>THIS PAGE</h2><p>Personal portfolio.<br>Not a landing page. No pitch, no funnel.<br>Built by the person who built the projects.</p></div></div>
+      <div class="foot-columns"><div><h2>CONTACT</h2><a class="email" href="mailto:denusklo@gmail.com">denusklo@gmail.com</a><p>Email is the fastest way to reach me.</p></div><div><h2>CODE</h2><a href="https://github.com/denusklo">github.com/denusklo ↗</a><p>Source for everything on this page.</p></div><div><h2>COLOPHON</h2><p>Inter, one weight axis.<br>A fixed grid with generous margins.<br>Ultramarine on near-black, one accent colour.<br><a href="https://www.rareui.com">Fluid by Rare UI ↗</a></p><ReferenceCredits /></div><div><h2>THIS PAGE</h2><p>Personal portfolio.<br>Not a landing page. No pitch, no funnel.<br>Built by the person who built the projects.</p></div></div>
       <ContactCta />
       <div class="baseline"><span>DEN<a href="/v1">PREVIOUS SITE →</a></span><span>DEN · 2026</span></div>
     </footer>

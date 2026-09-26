@@ -1,0 +1,136 @@
+---
+// Colophon credits for the design references, each with a thumbnail that opens the image in a modal.
+const references = [
+  {
+    id: 'ergun',
+    src: '/portfolio/references/ergun-bayrak-basic-design.jpg',
+    name: 'Ergun Bayrak, Basic Design',
+    source: 'https://www.cosmos.so/e/975233494',
+    caption: 'Palette and ellipses after Ergun Bayrak\'s <em>Basic Design</em>',
+  },
+  {
+    id: 'butterfly',
+    src: '/portfolio/references/butterfly-print-pinterest.jpg',
+    name: 'blue and white butterfly print, via Pinterest',
+    source: 'https://www.pinterest.com/pin/2392606047732301/',
+    caption: 'Hero after a butterfly print found on Pinterest',
+  },
+];
+---
+{references.map(ref => (
+  <p class="ref-line">
+    <button class="ref-thumb" type="button" data-ref-open={ref.id} aria-label={`View reference: ${ref.name}`}><img src={ref.src} alt="" loading="lazy" /></button>
+    <span><Fragment set:html={ref.caption} /> <a href={ref.source}>source ↗</a></span>
+  </p>
+))}
+{references.map(ref => (
+  <div class="ref-overlay" id={`ref-${ref.id}`} data-ref-overlay>
+    <div class="ref-panel t-modal" role="dialog" aria-modal="true" aria-labelledby={`ref-${ref.id}-caption`}>
+      <button class="ref-close" type="button">CLOSE</button>
+      <img src={ref.src} alt={ref.name} loading="lazy" />
+      <p class="ref-caption"><span id={`ref-${ref.id}-caption`} set:html={ref.caption} /> <a href={ref.source}>source ↗</a></p>
+    </div>
+  </div>
+))}
+
+<script>
+  const overlays = [...document.querySelectorAll<HTMLElement>('[data-ref-overlay]')];
+  // The foot sits inside .page's stacking context; lift the overlays out so they cover the nav too.
+  document.body.append(...overlays);
+  const closeMs = () => parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--modal-close-dur')) || 150;
+  // Wheel events would still drive the home page's smooth scroll behind the modal.
+  const blockWheel = (event: WheelEvent) => { if (!(event.target as Element).closest('.ref-panel')) { event.preventDefault(); event.stopImmediatePropagation(); } };
+  let open: { overlay: HTMLElement; opener: HTMLElement } | null = null;
+
+  const close = (refocus = true) => {
+    if (!open) return;
+    const { overlay, opener } = open;
+    const panel = overlay.querySelector('.t-modal')!;
+    open = null;
+    for (const el of [overlay, panel]) { el.classList.remove('is-open'); el.classList.add('is-closing'); }
+    setTimeout(() => { for (const el of [overlay, panel]) el.classList.remove('is-closing'); }, closeMs());
+    document.documentElement.classList.remove('ref-modal-open');
+    removeEventListener('wheel', blockWheel, { capture: true });
+    if (refocus) opener.focus();
+  };
+
+  const show = (overlay: HTMLElement, opener: HTMLElement) => {
+    if (open) close(false); // only one modal at a time
+    const panel = overlay.querySelector('.t-modal')!;
+    for (const el of [overlay, panel]) { el.classList.remove('is-closing'); el.classList.add('is-open'); }
+    open = { overlay, opener };
+    document.documentElement.classList.add('ref-modal-open');
+    addEventListener('wheel', blockWheel, { capture: true, passive: false });
+    overlay.querySelector<HTMLElement>('.ref-close')!.focus();
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-ref-open]').forEach(button => {
+    button.addEventListener('click', () => show(document.getElementById(`ref-${button.dataset.refOpen}`)!, button));
+  });
+  for (const overlay of overlays) {
+    overlay.addEventListener('click', event => { if (event.target === overlay) close(); });
+    overlay.querySelector('.ref-close')!.addEventListener('click', () => close());
+  }
+  document.addEventListener('keydown', event => {
+    if (!open) return;
+    if (event.key === 'Escape') { event.preventDefault(); close(); return; }
+    if (event.key !== 'Tab') return;
+    const focusable = [...open.overlay.querySelectorAll<HTMLElement>('button, a[href]')];
+    const first = focusable[0], last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    else if (!open.overlay.contains(document.activeElement)) { event.preventDefault(); first.focus(); }
+  });
+</script>
+
+<style is:global>
+  /* Transitions.dev — Modal open / close (https://transitions.dev/) */
+  :root {
+    --modal-open-dur: 250ms;
+    --modal-close-dur: 150ms;
+    --modal-scale: 0.96;
+    --modal-scale-close: 0.96;
+    --modal-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .t-modal {
+    transform-origin: center;
+    transform: scale(var(--modal-scale));
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      transform var(--modal-open-dur) var(--modal-ease),
+      opacity   var(--modal-open-dur) var(--modal-ease);
+    will-change: transform, opacity;
+  }
+  .t-modal.is-open { transform: scale(1); opacity: 1; pointer-events: auto; }
+  .t-modal.is-closing {
+    transform: scale(var(--modal-scale-close));
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      transform var(--modal-close-dur) var(--modal-ease),
+      opacity   var(--modal-close-dur) var(--modal-ease);
+  }
+  @media (prefers-reduced-motion: reduce) { .t-modal { transition: none !important; } }
+  /* end Transitions.dev */
+
+  .ref-line{display:flex;align-items:center;gap:10px;margin:10px 0 0!important}
+  .ref-line:first-of-type{margin-top:14px!important}
+  .ref-thumb{flex:none;width:30px;height:30px;padding:0;overflow:hidden;background:#1A1A20;border:1px solid #2C2C36;border-radius:2px;cursor:pointer}
+  .ref-thumb img{display:block;width:100%;height:100%;object-fit:cover}
+  .ref-thumb:focus-visible,.ref-close:focus-visible,.ref-caption a:focus-visible{outline:2px solid #8A87FF;outline-offset:2px}
+  .ref-line em,.ref-caption em{font-style:italic}
+
+  html.ref-modal-open{overflow:hidden}
+  .ref-overlay{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:rgb(16 16 20 / .8);opacity:0;visibility:hidden;pointer-events:none;transition:opacity var(--modal-close-dur) var(--modal-ease),visibility 0s linear var(--modal-close-dur)}
+  .ref-overlay.is-open{opacity:1;visibility:visible;pointer-events:auto;transition:opacity var(--modal-open-dur) var(--modal-ease)}
+  .ref-overlay.is-closing{visibility:visible}
+  .ref-panel{position:relative;padding:16px;background:#1A1A20;border:1px solid #2C2C36;border-radius:3px;color:#EDEDF2;font-family:Inter,Arial,Helvetica,sans-serif}
+  .ref-panel img{display:block;max-width:70vw;max-height:70vh;width:auto;height:auto}
+  .ref-close{display:block;margin:0 0 12px auto;padding:4px 0;background:none;border:0;color:#A9A9C4;font:inherit;font-size:10px;font-weight:600;letter-spacing:.12em;cursor:pointer}
+  .ref-close:hover{color:#EDEDF2}
+  .ref-caption{max-width:70vw;margin:12px 0 0;font-size:13px;line-height:1.5;color:#A9A9C4}
+  .ref-caption a{color:#EDEDF2;text-decoration:none}
+  .ref-caption a:hover{text-decoration:underline}
+  @media (prefers-reduced-motion: reduce) { .ref-overlay { transition: none !important; } }
+</style>
