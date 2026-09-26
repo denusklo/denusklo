@@ -1,0 +1,43 @@
+---
+// "Expanding Arrow Button" (beui.dev) ported to CSS: the accent tile widens and a
+// dotted-chevron trail staggers in on hover (hover-capable pointers only) or focus.
+const trail = [1, 0.78, 0.54, 0.32, 0.16];
+---
+<a class="cta" href="mailto:denusklo@gmail.com">
+  <span class="cta-tile" aria-hidden="true">
+    <span class="cta-chevron"><svg viewBox="0 0 20 28"><circle cx="4" cy="4" r="2"/><circle cx="10" cy="9" r="2"/><circle cx="16" cy="14" r="2"/><circle cx="10" cy="19" r="2"/><circle cx="4" cy="24" r="2"/></svg></span>
+    <span class="cta-trail">
+      {trail.map((opacity, i) => (
+        <span style={`--o:${opacity};--i:${i}`}><svg viewBox="0 0 20 28"><circle cx="4" cy="4" r="2"/><circle cx="10" cy="9" r="2"/><circle cx="16" cy="14" r="2"/><circle cx="10" cy="19" r="2"/><circle cx="4" cy="24" r="2"/></svg></span>
+      ))}
+    </span>
+  </span>
+  <span class="cta-label">CONTACT ME</span>
+</a>
+
+<style is:global>
+  .cta{--cta-radius:22px;--cta-ease:cubic-bezier(.16,1,.3,1);position:relative;display:inline-flex;align-items:center;height:64px;min-width:288px;padding:6px;overflow:hidden;border-radius:var(--cta-radius);background:#1A1A20;box-shadow:inset 0 0 0 1px #2C2C36;color:#EDEDF2;text-decoration:none;user-select:none;outline:none;transition:transform .2s var(--cta-ease)}
+  .cta:focus-visible{box-shadow:inset 0 0 0 1px #2C2C36,0 0 0 2px #101014,0 0 0 4px #8A87FF}
+  .cta:active{transform:scale(.97)}
+  .cta svg{display:block;width:20px;height:28px;fill:currentColor}
+  .cta-tile{position:absolute;z-index:1;top:6px;bottom:6px;left:6px;width:52px;overflow:hidden;border-radius:calc(var(--cta-radius) - 6px);background:#4B47FF;transition:width .45s var(--cta-ease)}
+  .cta-chevron{position:absolute;inset:0;display:grid;place-items:center;color:#fff;transition:opacity .1s var(--cta-ease)}
+  .cta-trail{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-around;padding:0 12px}
+  .cta-trail span{display:inline-grid;color:rgb(255 255 255 / var(--o));opacity:0;transform:translateX(-6px);transition:opacity .18s var(--cta-ease),transform .18s var(--cta-ease)}
+  .cta-label{position:relative;margin:0 20px 0 76px;white-space:nowrap;font-size:18px;font-weight:500;letter-spacing:-.02em;transition:opacity .12s var(--cta-ease),transform .12s var(--cta-ease)}
+  /* Active state, repeated for hover because hover only counts on a real pointer. */
+  .cta:focus .cta-tile{width:calc(100% - 12px)}
+  .cta:focus .cta-chevron,.cta:focus .cta-label{opacity:0}
+  .cta:focus .cta-trail span{opacity:1;transform:none;transition-delay:calc(40ms + var(--i) * 25ms)}
+  .cta:focus .cta-label{transform:translateX(6px)}
+  @media (hover:hover) and (pointer:fine){
+    .cta:hover .cta-tile{width:calc(100% - 12px)}
+    .cta:hover .cta-chevron,.cta:hover .cta-label{opacity:0}
+    .cta:hover .cta-trail span{opacity:1;transform:none;transition-delay:calc(40ms + var(--i) * 25ms)}
+    .cta:hover .cta-label{transform:translateX(6px)}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .cta,.cta *{transition:none!important}
+    .cta:active{transform:none}
+  }
+</style>
