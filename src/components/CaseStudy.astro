@@ -61,7 +61,7 @@ const { study } = Astro.props;
       <div><p class="small-label">CODE</p><a class="quiet" href="https://github.com/denusklo">github.com/denusklo ↗</a></div>
       <div><p class="small-label">BACK</p><a class="quiet" href="/">← Home</a><p class="quiet">All work, the band and the colophon live on the home page.</p></div>
     </div>
-    <div class="baseline"><span>DEN · 2026</span><span>CASE STUDY · {study.number} / 02</span></div>
+    <div class="baseline"><span>DEN · 2026<a href="/v1">PREVIOUS SITE →</a></span><span>CASE STUDY · {study.number} / 02</span></div>
   </div>
 </footer>
 
@@ -141,5 +141,8 @@ const { study } = Astro.props;
   a.quiet{display:inline-block;margin-bottom:8px}
   .quiet:hover,.next:hover{color:#EDEDF2}
   .foot-cols .cta{margin-top:14px}
+  .baseline a{margin-left:24px;text-decoration:none}
+  .baseline a:hover{color:#EDEDF2}
+  .baseline a:focus-visible{outline:1px solid #8A87FF;outline-offset:3px}
   .baseline{margin-top:56px;padding-top:23px;border-top:1px solid #2C2C36;display:flex;justify-content:space-between;color:#A9A9C4;font-size:10px;letter-spacing:.12em}
 </style>
