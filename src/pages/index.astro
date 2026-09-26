@@ -6,6 +6,7 @@ import ScrollProgress from '@/components/ScrollProgress.astro';
 import FluidField from '@/components/react/FluidField';
 import ReferenceCredits from '@/components/ReferenceCredits.astro';
 import '@/styles/portfolio-home.css';
+import '@/styles/portfolio-responsive.css';
 ---
 <PortfolioLayout
   title="Den · selected work"
@@ -15,7 +16,7 @@ import '@/styles/portfolio-home.css';
   <ScrollProgress />
   <div class="hero-track" id="hero-track">
     <section class="hero" id="hero" aria-label="Butterfly resting on a green field">
-      <video muted playsinline preload="auto" poster="/portfolio/hero-poster.jpg" aria-hidden="true"><source src="/portfolio/hero-scrub.mp4" type="video/mp4"></video>
+      <video muted playsinline preload="auto" poster="/portfolio/hero-poster.jpg" aria-hidden="true"><source data-src="/portfolio/hero-scrub.mp4" type="video/mp4"></video>
       <div class="hero-top-fade" aria-hidden="true"></div><div class="hero-bottom-fade" aria-hidden="true"></div>
     </section>
   </div>

@@ -61,6 +61,9 @@
   const track = document.getElementById('hero-track');
   const video = hero.querySelector('video');
   const nav = document.getElementById('nav');
+  // Wheel smoothing and the video scrub are for mouse and trackpad. Touch keeps native momentum
+  // scrolling and scrubs a frame sequence instead, because mobile browsers seek video poorly.
+  const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
   if (reduced.matches) {
     video.pause();
     // No wheel interception, scroll-linked translation, or scrub in reduced motion.
@@ -70,6 +73,7 @@
   }
 
   video.pause();
+  const scrub = finePointer ? videoScrub(video) : frameScrub(hero, video);
   const band = document.getElementById('band');
   const ground = document.getElementById('band-ground');
   const rule = document.getElementById('band-rule');
@@ -79,9 +83,6 @@
   let raf = 0;
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
   const maxScroll = () => Math.max(0, document.documentElement.scrollHeight - innerHeight);
-  // Only the first HERO_SECONDS of the clip are scrubbed.
-  const HERO_SECONDS = 5;
-  const seekDuration = () => Math.max(0, Math.min(video.duration || 8, HERO_SECONDS) - .04);
   // Medians from the actual top and bottom 50px of the original clip at 0, 2, 4, 6 and 7s.
   const greens = [
     [0, 28, 40, 29], [2, 36, 48, 37], [4, 33, 46, 35],
@@ -112,21 +113,19 @@
       }
     }
 
-    const pinDistance = Math.max(1, track.offsetHeight - innerHeight);
+    // Pin distance from the hero's own height, which stays put when a mobile address bar resizes the viewport.
+    const pinDistance = Math.max(1, track.offsetHeight - hero.offsetHeight);
     const progress = clamp(scrollY / pinDistance, 0, 1);
-    const desiredTime = progress * seekDuration();
+    const desiredTime = progress * scrub.duration();
     // Fade the whole hero out over the last part of the scrub: fully opaque until FADE_START, transparent at the end.
     const FADE_START = .45;
     const f = clamp((progress - FADE_START) / (1 - FADE_START), 0, 1);
     hero.style.opacity = String(1 - f * f * (3 - 2 * f));
-    if (video.readyState >= 1 && !video.seeking && Math.abs(desiredTime - video.currentTime) > .025) {
-      // Exactly one seek per frame; wait for the decoder before scheduling another.
-      video.currentTime = clamp(video.currentTime + (desiredTime - video.currentTime) * .24, 0, seekDuration());
-    }
-    hero.style.setProperty('--edge-rgb', colourForTime(video.currentTime));
+    const pending = scrub.seek(desiredTime);
+    hero.style.setProperty('--edge-rgb', colourForTime(scrub.time()));
     // During the release, content lags behind its viewport by 12%; the oversized video covers the edge.
     const release = clamp(scrollY - pinDistance, 0, innerHeight);
-    video.style.transform = `translateY(${release * .12}px)`;
+    scrub.el.style.transform = `translateY(${release * .12}px)`;
     // Nav arrives as the hero finishes fading (content is already sliding over it).
     nav.classList.toggle('is-visible', progress >= .95);
     const rect = band.getBoundingClientRect();
@@ -134,7 +133,7 @@
       ground.style.transform = `translateY(${-rect.top * .7}px)`;
       rule.style.transform = `translateY(${rect.top * .15}px)`;
     }
-    if (smoothScrolling || Math.abs(desiredTime - video.currentTime) > .03) schedule();
+    if (smoothScrolling || pending) schedule();
   };
   const schedule = () => { if (!raf) raf = requestAnimationFrame(tick); };
   const scrollToTarget = top => {
@@ -142,7 +141,7 @@
     smoothScrolling = true;
     schedule();
   };
-  addEventListener('wheel', event => {
+  if (finePointer) addEventListener('wheel', event => {
     if (event.ctrlKey || event.metaKey || event.shiftKey || event.defaultPrevented) return;
     event.preventDefault();
     const delta = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? innerHeight : 1);
@@ -154,9 +153,9 @@
     schedule();
   }, { passive: true });
   addEventListener('resize', () => { targetScroll = clamp(targetScroll, 0, maxScroll()); schedule(); });
-  video.addEventListener('loadedmetadata', () => { video.pause(); schedule(); });
-  video.addEventListener('seeked', schedule);
-  document.addEventListener('click', event => {
+  scrub.onready = schedule;
+  // Touch devices follow same-page anchors with native smooth scrolling (see portfolio-responsive.css).
+  if (finePointer) document.addEventListener('click', event => {
     const link = event.target.closest('a[href^="#"]');
     if (!link) return;
     const hash = link.getAttribute('href');
@@ -167,4 +166,96 @@
     scrollToTarget(destination.getBoundingClientRect().top + scrollY - 82);
   });
   tick();
+
+  // Only the first HERO_SECONDS of the clip are scrubbed.
+  function videoScrub(video) {
+    const HERO_SECONDS = 5;
+    const source = video.querySelector('source');
+    source.src = source.dataset.src;
+    video.load();
+    const scrub = {
+      el: video,
+      onready: () => {},
+      duration: () => Math.max(0, Math.min(video.duration || 8, HERO_SECONDS) - .04),
+      time: () => video.currentTime,
+      seek(desiredTime) {
+        if (video.readyState >= 1 && !video.seeking && Math.abs(desiredTime - video.currentTime) > .025) {
+          // Exactly one seek per frame; wait for the decoder before scheduling another.
+          video.currentTime = clamp(video.currentTime + (desiredTime - video.currentTime) * .24, 0, scrub.duration());
+        }
+        return Math.abs(desiredTime - video.currentTime) > .03;
+      },
+    };
+    video.addEventListener('loadedmetadata', () => { video.pause(); scrub.onready(); });
+    video.addEventListener('seeked', () => scrub.onready());
+    return scrub;
+  }
+
+  // The same first 5s as 120 WebP frames (24fps) drawn to a canvas. Frames load after the page does,
+  // coarse to fine, and the nearest loaded frame stands in until the exact one arrives. The hero's
+  // poster background shows until the first frame lands.
+  function frameScrub(hero, video) {
+    const FRAMES = 120, FPS = 24;
+    video.remove();
+    const canvas = document.createElement('canvas');
+    canvas.className = 'hero-frames';
+    canvas.setAttribute('aria-hidden', 'true');
+    hero.prepend(canvas);
+    const context = canvas.getContext('2d');
+    const images = [];
+    const loaded = new Array(FRAMES).fill(false);
+    let wanted = 0, shown = -1;
+    const nearest = index => {
+      for (let d = 0; d < FRAMES; d++) {
+        if (loaded[index - d]) return index - d;
+        if (loaded[index + d]) return index + d;
+      }
+      return -1;
+    };
+    const draw = () => {
+      const index = nearest(wanted);
+      if (index === -1 || index === shown) return;
+      const image = images[index];
+      // Cover-fit, centred: the same crop object-fit gives the desktop video.
+      const scale = Math.max(canvas.width / image.naturalWidth, canvas.height / image.naturalHeight);
+      const w = image.naturalWidth * scale, h = image.naturalHeight * scale;
+      context.drawImage(image, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
+      shown = index;
+    };
+    const size = () => {
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      canvas.width = Math.round(canvas.clientWidth * dpr);
+      canvas.height = Math.round(canvas.clientHeight * dpr);
+      shown = -1;
+      draw();
+    };
+    new ResizeObserver(size).observe(canvas);
+    const load = async () => {
+      const order = [];
+      for (const step of [24, 8, 4, 2, 1]) for (let i = 0; i < FRAMES; i += step) if (!order.includes(i)) order.push(i);
+      const next = () => {
+        const index = order.shift();
+        if (index === undefined) return Promise.resolve();
+        const image = new Image();
+        images[index] = image;
+        image.decoding = 'async';
+        image.src = `/portfolio/hero-frames/${String(index).padStart(3, '0')}.webp`;
+        return image.decode().then(() => { loaded[index] = true; draw(); }, () => {}).then(next);
+      };
+      await Promise.all(Array.from({ length: 6 }, next));
+    };
+    if (document.readyState === 'complete') setTimeout(load);
+    else addEventListener('load', () => setTimeout(load), { once: true });
+    return {
+      el: canvas,
+      onready: () => {},
+      duration: () => 5 - .04,
+      time: () => Math.max(0, shown) / FPS,
+      seek(desiredTime) {
+        wanted = Math.min(FRAMES - 1, Math.round(desiredTime * FPS));
+        draw();
+        return false;
+      },
+    };
+  }
 })();
