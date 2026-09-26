@@ -1,0 +1,50 @@
+---
+import PortfolioLayout from '@/layouts/PortfolioLayout.astro';
+import CaseStudy from '@/components/CaseStudy.astro';
+
+const study = {
+  number: '01',
+  name: 'HoopLandHelper',
+  what: "Watches a phone basketball game's shot meter on a live screen feed and releases each shot on the green.",
+  why: 'The green release window is too tight to hit by hand every time, so I let software time the tap.',
+  platform: 'PHONE + PC',
+  object: { src: '/portfolio/hooplandhelper-object.png', alt: 'Machined linear gauge with a slider parked on the ultramarine sweet spot', caption: 'THE SHOT METER AS A GAUGE' },
+  demos: [{
+    src: '/portfolio/hooplandhelper-demo.mp4',
+    poster: '/portfolio/hooplandhelper-poster.jpg',
+    alt: 'Reconstruction of HoopLandHelper releasing a shot on the green zone',
+    label: 'RECONSTRUCTION · BUILT FROM REAL GAME FRAMES',
+    caption: "demo.mp4 — plays inline, muted and looped. It is a reconstruction built from real captured game frames and the tool's real constants; only the cursor's in-between positions are interpolated. Not a raw screen recording.",
+  }],
+  how: {
+    route: 'PHONE → PC → PHONE',
+    intro: 'The phone only hardware-encodes its screen and receives touches. Everything in between runs on the PC.',
+    steps: [
+      { where: 'PHONE', accent: true, title: 'Screen record', text: "adb screenrecord streams H.264 from the phone's hardware encoder." },
+      { where: 'PC', title: 'Decode', text: 'PyAV turns the stream back into raw frames.' },
+      { where: 'PC', title: 'Scan the bar row', text: 'OpenCV finds the sweeping cursor and the green zone in the meter.' },
+      { where: 'PC', title: 'Schedule the release', text: 'A frame-clock PLL, a clock bridge from encoder timestamps to PC time, linear cursor prediction and an adaptive latency term decide the exact frame to fire.' },
+      { where: 'PC', title: 'Build the touch', text: 'The release is written as evdev touch events.' },
+      { where: 'PHONE', accent: true, title: 'Tap', text: 'A persistent root shell on the phone injects the touch.' },
+    ],
+  },
+  engineering: [
+    { title: 'Releasing on the right frame', text: "Seeing the meter is the easy part. The shot has to fire on the correct frame despite capture latency, touch latency and frame jitter. The scheduler maps the phone encoder's timestamps onto the PC's clock, predicts where the cursor will be, and fires early by the measured latency so the cursor coasts onto the green." },
+    { title: 'Moving the hot loop off the phone', text: 'It started as an on-phone Android app in Kotlin. Capture, analysis and timing on the device thermally throttled it and corrupted its own timing, so the loop moved to the PC. The phone now only encodes its screen and receives touches.' },
+    { title: 'Testable by design', text: "The original app's core logic sits behind functional interfaces, so it runs as plain JVM unit tests with no emulator. The Python shooter ships device-free self-checks that exercise the timing logic with no phone attached." },
+  ],
+  stack: [
+    { name: 'PYTHON', text: "Reads the phone's H.264 screen stream and runs the release scheduler." },
+    { name: 'OPENCV', text: "Finds the cursor and the green zone in the meter's bar row." },
+    { name: 'ADB', text: 'Carries both the screen capture and the injected touch to the phone.' },
+  ],
+  next: { name: 'autospinner', href: '/projects/autospinner' },
+};
+---
+<PortfolioLayout
+  title="HoopLandHelper · case study"
+  description={study.what}
+  image="/portfolio/hooplandhelper-poster.jpg"
+>
+  <CaseStudy study={study} />
+</PortfolioLayout>

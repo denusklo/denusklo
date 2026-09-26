@@ -1,0 +1,58 @@
+---
+import PortfolioLayout from '@/layouts/PortfolioLayout.astro';
+import CaseStudy from '@/components/CaseStudy.astro';
+
+const study = {
+  number: '02',
+  name: 'autospinner',
+  what: 'Solves Tower of Saviors orb boards in a browser or on Android, then executes the drag.',
+  why: 'Choosing and dragging an orb route by hand was the problem I wanted to automate.',
+  platform: 'BROWSER + ANDROID',
+  object: { src: '/portfolio/autospinner-object.png', alt: 'Shallow orb-board relief with one ultramarine orb selected', caption: 'ORB-BOARD RELIEF' },
+  demos: [
+    {
+      src: '/portfolio/autospinner-demo.mp4',
+      poster: '/portfolio/autospinner-poster.jpg',
+      alt: 'The browser extension solving and dragging an orb board',
+      label: 'REAL CAPTURE · demo.mp4',
+      caption: 'demo.mp4 — the browser extension reading the board, solving it, dragging the route and resolving the combos. Plays inline, muted and looped.',
+    },
+    {
+      src: '/portfolio/autospinner-phone-demo.mp4',
+      poster: '/portfolio/autospinner-phone-poster.jpg',
+      alt: 'autospinner recognising and dragging a board in the Android game',
+      label: 'REAL CAPTURE · phone-demo.mp4',
+      caption: 'phone-demo.mp4 — the Android path: recognition to MaaTouch in the live game. Plays inline, muted and looped.',
+    },
+  ],
+  how: {
+    route: 'READ → SOLVE → DRAG',
+    intro: 'Two targets share one solver. Only how the board is read and how the drag is performed change between them.',
+    steps: [
+      { where: 'BROWSER', title: 'Read the board', text: "Takes the orb grid straight from the simulator's canvas pixels." },
+      { where: 'ANDROID', title: 'Read the board', text: 'Classifies screenshot patches of the live game into orb types, and tracks sealed, shielded, cursed and blocked cells.' },
+      { where: 'SHARED', accent: true, title: 'Solve', text: 'Beam search over drag paths, each scored by an exact combo, gravity and cascade simulation.' },
+      { where: 'BROWSER', title: 'Drag', text: 'The Chrome extension performs the route in the simulator.' },
+      { where: 'ANDROID', title: 'Drag', text: 'ADB and MaaTouch perform the route on the phone, after dry-run and stale-board checks.' },
+    ],
+  },
+  engineering: [
+    { title: 'Cascade-aware search', text: 'Drag paths are scored by simulating the whole resolution — combos, gravity and cascades — not by matching only the first clear. Parallel beam search explores the routes, and constructive planners take over when the beam comes up empty.' },
+    { title: 'One solver, two targets', text: 'The same solving core drives a Chrome simulator and the real Android game. Reading the board differs — canvas pixels in the browser, classified screenshot patches on the phone — and so does the drag, but the decision is shared.' },
+    { title: 'Rules, not routes', text: 'The phone runner composes stage rules and card effects instead of hardcoding a route: clear-all demands, required or forbidden rune types, pinned endpoints, touch conversion, and rearrange mode with several physical drags before the board resolves.' },
+  ],
+  stack: [
+    { name: 'VANILLA JS', text: 'No build step and no package dependencies. A deterministic regression suite covers the solver.' },
+    { name: 'CHROME EXTENSION', text: 'Runs the solver against the browser simulator, reading its canvas and performing the drag.' },
+    { name: 'BEAM SEARCH', text: 'Parallel search over drag paths, scored by full cascade simulation.' },
+  ],
+  next: { name: 'HoopLandHelper', href: '/projects/hooplandhelper' },
+};
+---
+<PortfolioLayout
+  title="autospinner · case study"
+  description={study.what}
+  image="/portfolio/autospinner-poster.jpg"
+>
+  <CaseStudy study={study} />
+</PortfolioLayout>
