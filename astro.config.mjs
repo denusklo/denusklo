@@ -10,7 +10,8 @@ export default defineConfig({
   // SEO: Your site URL is required for sitemap generation and canonical URLs
   site: 'https://www.denusklo.com',
   integrations: [
-    tailwind(),
+    // Base styles are imported by BaseLayout so the new portfolio pages stay free of Tailwind's reset.
+    tailwind({ applyBaseStyles: false }),
     vue(),
     preact({
       include: ['**/preact/*', 'src/components/preact/*'],

@@ -1,0 +1,58 @@
+---
+import PortfolioLayout from '@/layouts/PortfolioLayout.astro';
+import { contributions } from '@/data/contributions';
+import '@/styles/portfolio-home.css';
+---
+<PortfolioLayout
+  title="Den · selected work"
+  description="Den's portfolio: HoopLandHelper, autospinner and open-source contributions."
+>
+  <header class="nav" id="nav"><div class="nav-inner"><a class="wordmark" href="/">Den</a><a class="nav-code" href="https://github.com/denusklo">GITHUB.COM/DENUSKLO ↗</a></div></header>
+  <div class="hero-track" id="hero-track">
+    <section class="hero" id="hero" aria-label="Butterfly resting on a green field">
+      <video muted playsinline preload="auto" poster="/portfolio/hero-poster.jpg" aria-hidden="true"><source src="/portfolio/hero-scrub.mp4" type="video/mp4"></video>
+      <div class="hero-top-fade" aria-hidden="true"></div><div class="hero-bottom-fade" aria-hidden="true"></div>
+    </section>
+  </div>
+  <div class="page">
+    <main>
+      <section class="selected content" aria-label="Selected work">
+        <div class="section-head"><h2>SELECTED WORK</h2><span>CASE STUDIES</span></div>
+        <article class="teaser"><div class="teaser-image"><img src="/portfolio/hooplandhelper-poster.jpg" alt="Hoop Land basketball game and shot-meter reconstruction"><span class="poster-label">RECONSTRUCTION</span></div><div class="teaser-copy"><h3>HoopLandHelper</h3><p>Watches a phone basketball game's shot meter on a live screen feed and releases each shot on the green.</p><a href="/projects/hooplandhelper">Read the case study →</a></div></article>
+        <article class="teaser"><div class="teaser-image"><img src="/portfolio/autospinner-poster.jpg" alt="Tower of Saviors orb board with browser solver controls"><span class="poster-label">REAL CAPTURE</span></div><div class="teaser-copy"><h3>autospinner</h3><p>Solves Tower of Saviors orb boards in a browser or on Android, then executes the drag.</p><a href="/projects/autospinner">Read the case study →</a></div></article>
+      </section>
+      <section class="band" id="band" aria-label="Built on a laptop. Still running on a schedule.">
+        <div class="band-ground" id="band-ground" aria-hidden="true"><div class="band-wash"></div><svg class="band-field" viewBox="0 0 1130 576" preserveAspectRatio="none"><path id="band-path" fill="white" fill-rule="evenodd"></path></svg></div>
+        <div class="band-rule" id="band-rule" aria-hidden="true"></div>
+        <h2>BUILT ON A LAPTOP.<br>STILL RUNNING<br>ON A SCHEDULE.</h2>
+      </section>
+      <section class="also content" aria-label="Also built">
+        <div class="section-head"><h2>ALSO BUILT</h2><span>STATIC BY DESIGN</span></div>
+        <div class="secondary-grid">
+          <article class="secondary-card"><div class="placeholder-still">STATIC STILL — NO DEMO</div><div class="secondary-copy"><h3>gall_2</h3><p>Indexes a local photo folder and serves it as a browsable gallery.</p><p class="reason">Built to learn file handling and static serving without a framework doing it for me.</p><small>PYTHON · FLASK · SQLITE</small></div></article>
+          <article class="secondary-card"><div class="placeholder-still">STATIC STILL — NO DEMO</div><div class="secondary-copy"><h3>Open Source</h3><p>Pull requests merged into repos I actually use.</p><p class="reason">Reading other people's code is faster than reading tutorials.</p><small>GIT · CODE REVIEW · PYTHON</small><a href="#contributions">Each one broken out below ↓</a></div></article>
+        </div>
+      </section>
+      <section class="contributions content" id="contributions" aria-label="Open-source contributions">
+        <div class="section-head"><h2>WHAT IS IN EACH CONTRIBUTION</h2><a href="https://github.com/denusklo">GITHUB.COM/DENUSKLO ↗</a></div>
+        {contributions.map(c => (
+          <div class="contribution"><div><strong>{c.repo}</strong><small>{c.language}</small></div><div><p>{c.change.split('`').map((part, i) => i % 2 ? <code>{part}</code> : part)}</p><p>{c.why}</p></div><div class="contribution-meta"><span>{c.status}</span><small>{c.date}</small><a href={c.url}>view PR ↗</a></div></div>
+        ))}
+      </section>
+    </main>
+    <footer class="foot content">
+      <div class="waterfall" id="waterfall" aria-hidden="true"><div class="waterfall-set set-a"></div><div class="waterfall-set set-b"></div></div>
+      <div class="foot-columns"><div><h2>CONTACT</h2><a class="email" href="mailto:denusklo@gmail.com">denusklo@gmail.com</a><p>Email is the fastest way to reach me.</p></div><div><h2>CODE</h2><a href="https://github.com/denusklo">github.com/denusklo ↗</a><p>Source for everything on this page.</p></div><div><h2>COLOPHON</h2><p>Inter, one weight axis.<br>A fixed grid with generous margins.<br>Ultramarine and white after M-03.</p></div><div><h2>THIS PAGE</h2><p>Personal portfolio.<br>Not a landing page. No pitch, no funnel.<br>Built by the person who built the projects.</p></div></div>
+      <a class="contact-button" href="mailto:denusklo@gmail.com">CONTACT ME</a>
+      <div class="baseline"><span>DEN</span><span>ULTRAMARINE · VIDEO GROUND</span></div>
+    </footer>
+  </div>
+</PortfolioLayout>
+
+<script>
+  import '@/scripts/portfolio-motion.js';
+</script>
+
+<style is:global>
+  .contribution code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .92em; }
+</style>
