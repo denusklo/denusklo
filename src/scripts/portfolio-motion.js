@@ -24,6 +24,7 @@
   columns.forEach(({ speed, rest }, i) => {
     const column = document.createElement('div');
     column.className = 'waterfall-column';
+    column.dataset.col = String(i);
     column.style.left = `${i * 182}px`;
     const cycleCount = speed + 2;
     let path = '';
@@ -57,6 +58,16 @@
     }
   });
 
+  // Narrow screens hide columns in CSS and scale the window to fit; desktop CSS ignores these variables.
+  const waterfall = document.getElementById('waterfall');
+  const fitWaterfall = () => {
+    const shown = [...waterfall.querySelectorAll('.waterfall-column')].filter(c => getComputedStyle(c).display !== 'none').length;
+    const logicalWidth = (shown - 1) * 182 + 220;
+    waterfall.style.setProperty('--wf-w', `${logicalWidth}px`);
+    waterfall.style.setProperty('--wf-scale', String(waterfall.clientWidth / logicalWidth));
+  };
+  new ResizeObserver(fitWaterfall).observe(waterfall);
+
   const hero = document.getElementById('hero');
   const track = document.getElementById('hero-track');
   const video = hero.querySelector('video');
@@ -64,6 +75,7 @@
   // Wheel smoothing and the video scrub are for mouse and trackpad. Touch keeps native momentum
   // scrolling and scrubs a frame sequence instead, because mobile browsers seek video poorly.
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const compact = matchMedia('(max-width: 1199px)');
   if (reduced.matches) {
     video.pause();
     // No wheel interception, scroll-linked translation, or scrub in reduced motion.
@@ -130,8 +142,16 @@
     nav.classList.toggle('is-visible', progress >= .95);
     const rect = band.getBoundingClientRect();
     if (rect.bottom >= 0 && rect.top <= innerHeight) {
-      ground.style.transform = `translateY(${-rect.top * .7}px)`;
-      rule.style.transform = `translateY(${rect.top * .15}px)`;
+      // Desktop anchors the layers with the band's top at the viewport top, where the full-height band rests.
+      // A shorter band rests centred, so narrow screens anchor there, and cap the speed so the ground
+      // (700px taller than the band at each edge) can never drift far enough to expose an edge.
+      let offset = rect.top, k = 1;
+      if (compact.matches) {
+        offset = rect.top - (innerHeight - rect.height) / 2;
+        k = Math.min(1, 690 / (.7 * (innerHeight + rect.height) / 2));
+      }
+      ground.style.transform = `translateY(${-offset * .7 * k}px)`;
+      rule.style.transform = `translateY(${offset * .15 * k}px)`;
     }
     if (smoothScrolling || pending) schedule();
   };
