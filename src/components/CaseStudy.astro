@@ -148,4 +148,44 @@ const { study } = Astro.props;
   .baseline a:hover{color:#EDEDF2}
   .baseline a:focus-visible{outline:1px solid #8A87FF;outline-offset:3px}
   .baseline{margin-top:56px;padding-top:23px;border-top:1px solid #2C2C36;display:flex;justify-content:space-between;color:#A9A9C4;font-size:10px;letter-spacing:.12em}
+  /* Tablet and phone: same sections, fluid width, type sized with clamp(). Desktop above is untouched. */
+  @media (max-width:1199px){
+    body{min-width:0;overflow-x:clip}
+    .cs-inner,.cs{width:calc(100% - 2 * var(--gutter))}
+    .cs-nav{height:calc(82px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top)}
+    .cs-nav nav{gap:clamp(16px, 3vw, 32px)}
+    .cs-intro{padding-top:clamp(56px, 9vw, 120px)}
+    .cs-intro h1{font-size:clamp(44px, 8.6vw, 108px);overflow-wrap:anywhere}
+    .lead{font-size:clamp(18px, 2.1vw, 24px)}
+    .tags{line-height:2}
+    .tags span{margin-left:0;display:inline-block;padding-left:clamp(12px, 3vw, 36px)}
+    .object{margin-top:clamp(48px, 8vw, 110px)}
+    .object img{width:min(868px, 100%)}
+    .object figcaption{margin-top:clamp(28px, 5vw, 70px)}
+    .demo{margin-top:clamp(48px, 7vw, 90px)}
+    .demo+.demo{margin-top:clamp(32px, 4vw, 56px)}
+    .demo-frame{width:100%;height:auto;aspect-ratio:16/9}
+    .cs-section{padding-top:clamp(80px, 11vw, 150px)}
+    .section-head{height:auto;min-height:32px;flex-wrap:wrap;column-gap:16px;row-gap:6px}
+    .label-row{grid-template-columns:clamp(140px, 18vw, 220px) 1fr;column-gap:16px}
+    .label-row p{font-size:clamp(17px, 2vw, 22px)}
+    .how-intro{font-size:clamp(17px, 1.9vw, 20px);margin:clamp(28px, 4vw, 44px) 0 clamp(20px, 2.5vw, 28px)}
+    .steps li{grid-template-columns:44px 100px minmax(150px, 220px) 1fr;column-gap:12px}
+    .notes{gap:clamp(24px, 3vw, 36px)}
+    .stack-row p{font-size:clamp(16px, 1.7vw, 18px)}
+    .cs-foot{margin-top:clamp(72px, 10vw, 120px);padding-top:clamp(56px, 8vw, 94px)}
+    .next{font-size:clamp(36px, 6vw, 64px);margin-bottom:clamp(40px, 6vw, 76px);overflow-wrap:anywhere}
+    .foot-cols{grid-template-columns:1fr 1fr;gap:32px 24px}
+    .baseline{flex-wrap:wrap;gap:8px 24px}
+  }
+  @media (max-width:767px){
+    /* The breadcrumb repeats the page title; phones keep HOME and GITHUB. */
+    .cs-nav nav span{display:none}
+    .label-row{grid-template-columns:1fr;row-gap:10px}
+    .label-row h3{margin:0}
+    .steps li{grid-template-columns:40px 1fr;row-gap:6px;padding:16px 0}
+    .steps li strong,.steps li p{grid-column:1 / -1}
+    .notes{grid-template-columns:1fr}
+    .foot-cols{grid-template-columns:1fr}
+  }
 </style>

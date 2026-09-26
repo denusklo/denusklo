@@ -66,6 +66,9 @@ const { title, description, image = '/portfolio/hero-poster.jpg' } = Astro.props
 </html>
 
 <style is:global>
+  /* Side gutters for the new pages below desktop width, clear of notches in landscape. */
+  @media (max-width:1199px){:root{--gutter:max(32px, env(safe-area-inset-left), env(safe-area-inset-right))}}
+  @media (max-width:767px){:root{--gutter:max(20px, env(safe-area-inset-left), env(safe-area-inset-right))}}
   html.is-loading{overflow:hidden}
   .loader{--ink:#EDEDF2;--ink-3:#A0A0AA;position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;gap:10px;background:#101014;transition:opacity .3s ease}
   .loader.is-done{opacity:0;pointer-events:none}

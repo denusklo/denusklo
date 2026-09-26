@@ -23,7 +23,6 @@
 
 /* Tablet 768–1199px: fluid content width. Phone under 768px: one column, 20px gutters. */
 @media (max-width:1199px) {
-  :root{--gutter:max(32px, env(safe-area-inset-left), env(safe-area-inset-right))}
   .page{width:100%;min-width:0}
   .content,.nav-inner{width:calc(100% - 2 * var(--gutter))}
   .nav{height:calc(82px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top)}
@@ -76,7 +75,6 @@
   .teaser-image{width:100%}
 }
 @media (max-width:767px) {
-  :root{--gutter:max(20px, env(safe-area-inset-left), env(safe-area-inset-right))}
   .secondary-grid{grid-template-columns:1fr}
   .secondary-card{min-height:0}
   .contribution{display:block;min-height:0;padding:20px 0}
