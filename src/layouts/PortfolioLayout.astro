@@ -18,6 +18,65 @@ const { title, description, image = '/portfolio/hero-poster.jpg' } = Astro.props
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet" />
   </head>
   <body>
+    <script is:inline>
+      // First-visit loader: once per session, on whichever new-design page is entered first.
+      // Injected before first paint; visitors without JS never see it.
+      (() => {
+        try {
+          if (sessionStorage.getItem('den-loader')) return;
+          sessionStorage.setItem('den-loader', '1');
+        } catch { return; }
+        const LOADER_MIN_MS = 900, LOADER_MAX_MS = 1800, LOADER_CAP_MS = 3000;
+        const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const start = performance.now();
+        const duration = LOADER_MIN_MS + Math.random() * (LOADER_MAX_MS - LOADER_MIN_MS);
+        // "Drive" chevron: each cell's delay is (column + distance from the middle row) × 90ms.
+        const delays = Array.from({ length: 9 }, (_, i) => (i % 3 + Math.abs(Math.floor(i / 3) - 1)) * 90);
+        const loader = document.createElement('div');
+        loader.className = 'loader';
+        loader.setAttribute('role', 'status');
+        loader.setAttribute('aria-live', 'polite');
+        loader.innerHTML = `<div class="loader-grid" aria-hidden="true">${delays.map(d => `<i style="animation-delay:${d}ms"></i>`).join('')}</div><span class="loader-label">Loading</span><span class="loader-time" aria-hidden="true">0.0s</span>`;
+        document.body.prepend(loader);
+        document.documentElement.classList.add('is-loading');
+        // Keep the home page's smooth-scroll wheel handler from moving the page underneath.
+        const block = event => { event.preventDefault(); event.stopImmediatePropagation(); };
+        addEventListener('wheel', block, { capture: true, passive: false });
+        const time = loader.querySelector('.loader-time');
+        const timer = setInterval(() => { time.textContent = `${((performance.now() - start) / 1000).toFixed(1)}s`; }, 100);
+        const heroReady = () => {
+          const video = document.querySelector('#hero video');
+          return reduce || !video || video.readyState >= 3;
+        };
+        const check = () => {
+          const elapsed = performance.now() - start;
+          if (elapsed < LOADER_CAP_MS && (elapsed < duration || !heroReady())) return setTimeout(check, 50);
+          clearInterval(timer);
+          removeEventListener('wheel', block, { capture: true });
+          document.documentElement.classList.remove('is-loading');
+          scrollTo(0, 0);
+          loader.classList.add('is-done');
+          setTimeout(() => loader.remove(), reduce ? 0 : 300);
+        };
+        setTimeout(check, duration);
+      })();
+    </script>
     <slot />
   </body>
 </html>
+
+<style is:global>
+  html.is-loading{overflow:hidden}
+  .loader{--ink:#EDEDF2;--ink-3:#A0A0AA;position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;gap:10px;background:#101014;transition:opacity .3s ease}
+  .loader.is-done{opacity:0;pointer-events:none}
+  .loader-grid{display:grid;grid-template-columns:repeat(3,4px);gap:1.5px}
+  .loader-grid i{width:4px;height:4px;border-radius:1px;background:var(--ink);opacity:.15;animation:pixel-on 650ms ease-in-out infinite}
+  .loader-label{font-size:13px;font-weight:500;color:transparent;background:linear-gradient(90deg,var(--ink-3) 35%,var(--ink) 50%,var(--ink-3) 65%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;animation:shimmer-text 1.4s linear infinite}
+  .loader-time{font:12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink-3);font-variant-numeric:tabular-nums}
+  @keyframes pixel-on{0%,100%{opacity:.15}30%{opacity:1}}
+  @keyframes shimmer-text{from{background-position:100% 0}to{background-position:-100% 0}}
+  @media (prefers-reduced-motion:reduce){
+    .loader,.loader *{animation:none!important;transition:none!important}
+    .loader-label{color:var(--ink-3);background:none}
+  }
+</style>
