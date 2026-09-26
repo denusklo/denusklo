@@ -1,12 +1,14 @@
 ---
 import ContactCta from './ContactCta.astro';
+import ScrollProgress from './ScrollProgress.astro';
 
 // Shared case-study page body; each /projects/* page passes its own copy.
 const { study } = Astro.props;
 ---
 <header class="cs-nav"><div class="cs-inner"><a class="wordmark" href="/">Den</a><nav><a class="home" href="/">← HOME</a><span>WORK / {study.name.toUpperCase()}</span><a href="https://github.com/denusklo">GITHUB ↗</a></nav></div></header>
+<ScrollProgress />
 <main class="cs">
-  <section class="cs-intro">
+  <section class="cs-intro" id="overview" data-section="Overview">
     <p class="accent-label">CASE STUDY · {study.number}</p>
     <h1>{study.name}</h1>
     <p class="lead">{study.what}</p>
@@ -16,8 +18,8 @@ const { study } = Astro.props;
     <img src={study.object.src} alt={study.object.alt} width="868" height="175">
     <figcaption>OBJECT · {study.object.caption}</figcaption>
   </figure>
-  {study.demos.map(demo => (
-    <figure class="demo">
+  {study.demos.map((demo, i) => (
+    <figure class="demo" {...(i === 0 && { id: 'demo', 'data-section': 'Demo' })}>
       <div class="demo-frame">
         <video muted loop playsinline preload="none" poster={demo.poster} aria-label={demo.alt}><source src={demo.src} type="video/mp4"></video>
         <span class="demo-label">▶ {demo.label}</span>
@@ -25,12 +27,12 @@ const { study } = Astro.props;
       <figcaption>{demo.caption}</figcaption>
     </figure>
   ))}
-  <section class="cs-section">
+  <section class="cs-section" id="project" data-section="The project">
     <div class="section-head"><h2>THE PROJECT</h2></div>
     <div class="label-row"><h3 class="accent-label">WHAT IT DOES</h3><p>{study.what}</p></div>
     <div class="label-row"><h3>WHY I BUILT IT</h3><p>{study.why}</p></div>
   </section>
-  <section class="cs-section">
+  <section class="cs-section" id="how-it-works" data-section="How it works">
     <div class="section-head"><h2>HOW IT WORKS</h2><span>{study.how.route}</span></div>
     <p class="how-intro">{study.how.intro}</p>
     <ol class="steps">
@@ -39,7 +41,7 @@ const { study } = Astro.props;
       ))}
     </ol>
   </section>
-  <section class="cs-section">
+  <section class="cs-section" id="engineering" data-section="The engineering">
     <div class="section-head"><h2>THE ENGINEERING</h2></div>
     <div class="notes">
       {study.engineering.map((note, i) => (
@@ -47,12 +49,12 @@ const { study } = Astro.props;
       ))}
     </div>
   </section>
-  <section class="cs-section">
+  <section class="cs-section" id="stack" data-section="Stack">
     <div class="section-head"><h2>STACK</h2></div>
     {study.stack.map(s => <div class="label-row stack-row"><h3>{s.name}</h3><p>{s.text}</p></div>)}
   </section>
 </main>
-<footer class="cs-foot">
+<footer class="cs-foot" id="next" data-section="Next case study">
   <div class="cs-inner">
     <p class="small-label">NEXT CASE STUDY</p>
     <a class="next" href={study.next.href}>{study.next.name} <span aria-hidden="true">→</span></a>
@@ -82,6 +84,7 @@ const { study } = Astro.props;
 <style is:global>
   *{box-sizing:border-box}
   html{background:#101014}
+  @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
   body{margin:0;min-width:1440px;background:#101014;color:#EDEDF2;font-family:Inter,Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased}
   a{color:inherit}
   .cs-inner,.cs{width:1200px;margin:0 auto}
