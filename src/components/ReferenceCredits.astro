@@ -133,4 +133,16 @@ const references = [
   .ref-caption a{color:#EDEDF2;text-decoration:none}
   .ref-caption a:hover{text-decoration:underline}
   @media (prefers-reduced-motion: reduce) { .ref-overlay { transition: none !important; } }
+  /* Touch: 44px hit areas without changing how the 30px thumb or the CLOSE label look. */
+  @media (pointer:coarse){
+    .ref-thumb{position:relative;overflow:visible}
+    .ref-thumb img{border-radius:1px}
+    .ref-thumb::after{content:'';position:absolute;inset:-8px}
+    .ref-close{min-width:44px;min-height:44px;margin:-10px -12px 2px auto;padding:0 12px}
+  }
+  @media (max-width:767px){
+    .ref-panel{padding:14px}
+    .ref-panel img{max-width:calc(90vw - 30px);max-height:min(80svh, 100svh - 180px)}
+    .ref-caption{max-width:calc(90vw - 30px)}
+  }
 </style>

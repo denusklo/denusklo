@@ -57,6 +57,13 @@ const trail = [1, 0.78, 0.54, 0.32, 0.16];
     .cta:hover .cta-trail span{opacity:1;transform:none;transition-delay:calc(40ms + var(--i) * 25ms)}
     .cta:hover .cta-label{transform:translateX(6px)}
   }
+  /* Touch: a tap focuses the link on its way to mailto; don't leave it stuck expanded. Keyboard focus still expands. */
+  @media not all and (hover:hover) and (pointer:fine){
+    .cta:focus:not(:focus-visible) .cta-tile{width:36px}
+    .cta:focus:not(:focus-visible) .cta-chevron,.cta:focus:not(:focus-visible) .cta-label{opacity:1}
+    .cta:focus:not(:focus-visible) .cta-trail span{opacity:0;transform:translateX(-6px);transition-delay:0s}
+    .cta:focus:not(:focus-visible) .cta-label{transform:none}
+  }
   @media (prefers-reduced-motion:reduce){
     .cta,.cta *{transition:none!important}
     .cta:active{transform:none}
