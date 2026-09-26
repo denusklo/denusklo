@@ -1,0 +1,22 @@
+# Rebuilds production daily so the open-source rows on the home page pick up new PRs.
+# Needs the repo secret VERCEL_DEPLOY_HOOK (a Vercel Deploy Hook for main); skips without it.
+name: Refresh contributions
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  redeploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel deploy hook
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "VERCEL_DEPLOY_HOOK is not set; skipping."
+            exit 0
+          fi
+          curl -fsS -X POST "$HOOK"

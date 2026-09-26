@@ -1,0 +1,18 @@
+{
+  "coder/code-server": {
+    "what": "Added a Windows release build: package job, launcher, named-pipe session socket and fixes to the Windows build scripts.",
+    "why": "Windows had no code-server build, and tode needed one.",
+    "pin": "https://github.com/coder/code-server/pull/7987"
+  },
+  "nedpals/supabase-go": {
+    "what": "`VerifyOtp` sent its credentials in the wrong JSON shape; they are now marshalled properly.",
+    "why": "It broke OTP login in my own Supabase-auth project."
+  },
+  "zenbu-labs/terminal-browser": {
+    "what": "Native Windows support for tode.",
+    "why": "Wanted tode on Windows."
+  },
+  "zenbu-labs/terminal-code": {
+    "hide": true
+  }
+}

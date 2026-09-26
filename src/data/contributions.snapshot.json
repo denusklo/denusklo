@@ -1,0 +1,81 @@
+{
+  "fetchedAt": "2026-09-26T18:12:54.294Z",
+  "prs": [
+    {
+      "repo": "coder/code-server",
+      "url": "https://github.com/coder/code-server/pull/7989",
+      "title": "Detect the system on windows instead of reading Windows_NT",
+      "status": "MERGED",
+      "date": "2026-09-08T20:47:04Z"
+    },
+    {
+      "repo": "coder/code-server",
+      "url": "https://github.com/coder/code-server/pull/7987",
+      "title": "Add a windows package job to the release workflow",
+      "status": "MERGED",
+      "date": "2026-09-08T21:13:59Z"
+    },
+    {
+      "repo": "coder/code-server",
+      "url": "https://github.com/coder/code-server/pull/7986",
+      "title": "Fix the windows arms of the release build scripts",
+      "status": "MERGED",
+      "date": "2026-09-08T21:00:10Z"
+    },
+    {
+      "repo": "coder/code-server",
+      "url": "https://github.com/coder/code-server/pull/7985",
+      "title": "Default the session socket to a named pipe on windows",
+      "status": "MERGED",
+      "date": "2026-09-08T20:37:52Z"
+    },
+    {
+      "repo": "coder/code-server",
+      "url": "https://github.com/coder/code-server/pull/7984",
+      "title": "Add a windows launcher to the standalone release",
+      "status": "MERGED",
+      "date": "2026-09-08T20:27:19Z"
+    },
+    {
+      "repo": "zenbu-labs/terminal-code",
+      "url": "https://github.com/zenbu-labs/terminal-code/pull/30",
+      "title": "Local code-server mode on Windows",
+      "status": "OPEN",
+      "date": "2026-09-04T17:59:55Z"
+    },
+    {
+      "repo": "coder/code-server",
+      "url": "https://github.com/coder/code-server/pull/7983",
+      "title": "fix: guard FORCE_NODE_VERSION in the version error path",
+      "status": "MERGED",
+      "date": "2026-09-04T18:46:24Z"
+    },
+    {
+      "repo": "coder/code-server",
+      "url": "https://github.com/coder/code-server/pull/7982",
+      "title": "fix: run mklink through cmd so Windows npm install works",
+      "status": "MERGED",
+      "date": "2026-09-04T20:06:31Z"
+    },
+    {
+      "repo": "zenbu-labs/terminal-browser",
+      "url": "https://github.com/zenbu-labs/terminal-browser/pull/96",
+      "title": "Native Windows support",
+      "status": "OPEN",
+      "date": "2026-09-04T00:42:13Z"
+    },
+    {
+      "repo": "nedpals/supabase-go",
+      "url": "https://github.com/nedpals/supabase-go/pull/70",
+      "title": "fix(auth): properly marshal VerifyOtpCredentials in VerifyOtp method",
+      "status": "MERGED",
+      "date": "2025-12-15T00:24:23Z"
+    }
+  ],
+  "languages": {
+    "coder/code-server": "TypeScript",
+    "zenbu-labs/terminal-code": "TypeScript",
+    "zenbu-labs/terminal-browser": "TypeScript",
+    "nedpals/supabase-go": "Go"
+  }
+}
