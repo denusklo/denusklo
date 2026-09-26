@@ -61,6 +61,8 @@ import '@/styles/portfolio-home.css';
 <style is:global>
   .foot > .cta { margin-top: 35px; }
   .fluid-slot { position: relative; overflow: hidden; }
+  /* 2px #001CAE outline outside the glyphs: a 4px stroke painted under the fill, so glyph width doesn't shrink. */
+  .band h2 { -webkit-text-stroke: 4px #001CAE; paint-order: stroke fill; }
   .baseline a { margin-left: 24px; text-decoration: none; }
   .baseline a:focus-visible { outline: 1px solid #8A87FF; outline-offset: 3px; }
   .contribution code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .92em; }
