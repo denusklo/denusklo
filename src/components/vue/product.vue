@@ -95,8 +95,8 @@
         selectedVariant: 0,
         details: ['50% cotton', '30% wool', '20% polyester'],
         variants: [
-          { id: 2234, color: 'green', image: 'socks1.jpg', quantity: 50 },
-          { id: 2235, color: 'blue', image: 'socks2.jpg', quantity: 1 },
+          { id: 2234, color: 'green', image: '/socks1.jpg', quantity: 50 },
+          { id: 2235, color: 'blue', image: '/socks2.jpg', quantity: 1 },
         ],
         reviews: [],
       }
