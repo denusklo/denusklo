@@ -10,6 +10,8 @@ import React, { useEffect, useRef } from 'react'
 export type FluidFieldProps = React.ComponentProps<'div'> & {
   color?: string
   base?: string
+  /** Seconds added to the shader clock, so several fields on one page don't move in lockstep. */
+  timeOffset?: number
 }
 
 const VERT = `
@@ -114,6 +116,7 @@ function compile(gl: WebGLRenderingContext, type: number, src: string) {
 const FluidField = ({
   color = '#4B47FF',
   base = '#23232B',
+  timeOffset = 0,
   className,
   style,
   ...props
@@ -168,7 +171,7 @@ const FluidField = ({
     let onScreen = false
 
     const draw = () => {
-      gl.uniform1f(uTime, reduce ? 0 : elapsed / 1000)
+      gl.uniform1f(uTime, (reduce ? 0 : elapsed / 1000) + timeOffset)
       gl.drawArrays(gl.TRIANGLES, 0, 6)
     }
     const frame = (now: number) => {
@@ -219,7 +222,7 @@ const FluidField = ({
       gl.deleteShader(frag)
       gl.deleteBuffer(buffer)
     }
-  }, [color, base])
+  }, [color, base, timeOffset])
 
   return (
     <div
