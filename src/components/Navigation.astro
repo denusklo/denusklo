@@ -8,7 +8,8 @@ const navItems = [
   { text: "New site →", href: "/" }
 ];
 
-const currentPath = Astro.url.pathname;
+// Static builds give pathnames a trailing slash (/v1/), so drop it before comparing.
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 
 <nav class="flex flex-col md:flex-row md:gap-6">
