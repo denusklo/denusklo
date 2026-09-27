@@ -3,6 +3,7 @@ import ContactCta from './ContactCta.astro';
 import ScrollProgress from './ScrollProgress.astro';
 
 // Shared case-study page body; each /projects/* page passes its own copy.
+// An `object` slot replaces the static object image (autospinner's 3D stage).
 const { study } = Astro.props;
 ---
 <header class="cs-nav"><div class="cs-inner"><a class="wordmark" href="/">Den</a><nav><a class="home" href="/">← HOME</a><span>WORK / {study.name.toUpperCase()}</span><a href="https://github.com/denusklo">GITHUB ↗</a></nav></div></header>
@@ -14,10 +15,12 @@ const { study } = Astro.props;
     <p class="lead">{study.what}</p>
     <p class="tags">{study.stack.map(s => s.name).join(' · ')}<span>{study.platform}</span></p>
   </section>
-  <figure class="object">
-    <img src={study.object.src} alt={study.object.alt} width="868" height="175">
-    <figcaption>OBJECT · {study.object.caption}</figcaption>
-  </figure>
+  {Astro.slots.has('object') ? <slot name="object" /> : (
+    <figure class="object">
+      <img src={study.object.src} alt={study.object.alt} width="868" height="175">
+      <figcaption>OBJECT · {study.object.caption}</figcaption>
+    </figure>
+  )}
   {study.demos.map((demo, i) => (
     <figure class="demo" {...(i === 0 && { id: 'demo', 'data-section': 'Demo' })}>
       <div class="demo-frame">
