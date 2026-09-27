@@ -1,23 +1,71 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
-import DroidLanding from '@/components/vue/DroidLanding.vue';
-import greetings from '@/data/greetings.js';
-
-const pageTitle = "Den Kong | Fullstack Developer";
+import PortfolioLayout from '@/layouts/PortfolioLayout.astro';
+import { contributions } from '@/data/contributions';
+import ContactCta from '@/components/ContactCta.astro';
+import ScrollProgress from '@/components/ScrollProgress.astro';
+import FluidField from '@/components/react/FluidField';
+import ReferenceCredits from '@/components/ReferenceCredits.astro';
+import '@/styles/portfolio-home.css';
+import '@/styles/portfolio-responsive.css';
 ---
-<BaseLayout pageTitle={pageTitle}>
-  <DroidLanding
-    client:load
-    greetings={greetings}
-  />
-</BaseLayout>
+<PortfolioLayout
+  title="Den · selected work"
+  description="Den's portfolio: HoopLandHelper, autospinner and open-source contributions."
+>
+  <header class="nav" id="nav"><div class="nav-inner"><a class="wordmark" href="/">Den</a><a class="nav-code" href="https://github.com/denusklo">GITHUB.COM/DENUSKLO ↗</a></div></header>
+  <ScrollProgress />
+  <div class="hero-track" id="hero-track">
+    <section class="hero" id="hero" aria-label="Butterfly resting on a green field">
+      <video muted playsinline preload="auto" poster="/portfolio/hero-poster.jpg" aria-hidden="true"><source data-src="/portfolio/hero-scrub.mp4" type="video/mp4"></video>
+      <div class="hero-top-fade" aria-hidden="true"></div><div class="hero-bottom-fade" aria-hidden="true"></div>
+    </section>
+  </div>
+  <div class="page">
+    <main>
+      <section class="selected content" id="selected-work" data-section="Selected work" aria-label="Selected work">
+        <div class="section-head"><h2>SELECTED WORK</h2><span>CASE STUDIES</span></div>
+        <article class="teaser"><div class="teaser-image"><img src="/portfolio/hooplandhelper-poster.jpg" alt="Hoop Land basketball game and shot-meter reconstruction"><span class="poster-label">RECONSTRUCTION</span></div><div class="teaser-copy"><h3>HoopLandHelper</h3><p>Watches a phone basketball game's shot meter on a live screen feed and releases each shot on the green.</p><a href="/projects/hooplandhelper">Read the case study →</a></div></article>
+        <article class="teaser"><div class="teaser-image"><img src="/portfolio/autospinner-poster.jpg" alt="Tower of Saviors orb board with browser solver controls"><span class="poster-label">REAL CAPTURE</span></div><div class="teaser-copy"><h3>autospinner</h3><p>Solves Tower of Saviors orb boards in a browser or on Android, then executes the drag.</p><a href="/projects/autospinner">Read the case study →</a></div></article>
+      </section>
+      <section class="band" id="band" data-section="Made for one problem" aria-label="Made for one problem">
+        <div class="band-ground" id="band-ground" aria-hidden="true"><div class="band-wash"></div><svg class="band-field" viewBox="0 0 1130 576" preserveAspectRatio="none"><path id="band-path" fill="white" fill-rule="evenodd"></path></svg></div>
+        <div class="band-rule" id="band-rule" aria-hidden="true"></div>
+        <h2>MADE FOR<br>ONE PROBLEM.<br>KEPT GOING.</h2>
+      </section>
+      <section class="also content" id="also-built" data-section="Also built" aria-label="Also built">
+        <div class="section-head"><h2>ALSO BUILT</h2></div>
+        <div class="secondary-grid">
+          <article class="secondary-card"><div class="placeholder-still fluid-slot"><FluidField client:visible /></div><div class="secondary-copy"><h3>gall_2</h3><p>A photo gallery with albums and cloud uploads, plus a board where people post requests and others complete them.</p><p class="reason">Built for learning: one full Laravel and Vue app, end to end.</p><small>LARAVEL · VUE · MYSQL · SUPABASE · FIREBASE</small><a href="https://gall-2.vercel.app">gall-2.vercel.app ↗</a></div></article>
+          <article class="secondary-card"><div class="placeholder-still fluid-slot"><FluidField client:visible timeOffset={37} base="#23232B" mid="#A0A0AA" color="#EDEDF2" highlight={[0.78, 1.0]} /></div><div class="secondary-copy"><h3>Open Source</h3><p>Pull requests to repos I actually use.</p><p class="reason">Fixing the tools I use, where they break.</p><small>TYPESCRIPT · SHELL · GO</small><a href="#contributions">Each one broken out below ↓</a></div></article>
+        </div>
+      </section>
+      <section class="contributions content" id="contributions" data-section="Contributions" aria-label="Open-source contributions">
+        <div class="section-head"><h2>WHAT IS IN EACH CONTRIBUTION</h2><a href="https://github.com/denusklo">GITHUB.COM/DENUSKLO ↗</a></div>
+        {contributions.map(c => (
+          <div class="contribution"><div><strong>{c.repo}</strong><small>{c.language}</small></div><div><p>{c.change.split('`').map((part, i) => i % 2 ? <code>{part}</code> : part)}</p>{c.why && <p>{c.why}</p>}</div><div class="contribution-meta"><span>{c.status}</span><small>{c.date}</small><a href={c.url}>view PR ↗</a></div></div>
+        ))}
+      </section>
+    </main>
+    <footer class="foot content" id="contact" data-section="Contact">
+      <div class="waterfall" id="waterfall" aria-hidden="true"><div class="waterfall-set set-a"></div><div class="waterfall-set set-b"></div></div>
+      <div class="foot-columns"><div><h2>CONTACT</h2><a class="email" href="mailto:denusklo@gmail.com">denusklo@gmail.com</a><p>Email is the fastest way to reach me.</p><ContactCta /></div><div><h2>CODE</h2><a href="https://github.com/denusklo">github.com/denusklo ↗</a><p>Source for everything on this page.</p></div><div><h2>COLOPHON</h2><p>Inter, one weight axis.<br>A fixed grid with generous margins.<br>Ultramarine on near-black, one accent colour.</p><ReferenceCredits /><p class="ui-credits">UI from <a href="https://beui.dev">beui&nbsp;↗</a>, <a href="https://www.beautifului.dev">Beautiful&nbsp;UI&nbsp;↗</a>, <a href="https://www.rareui.com">Rare&nbsp;UI&nbsp;↗</a> and <a href="https://transitions.dev">Transitions.dev&nbsp;↗</a></p></div><div><h2>THIS PAGE</h2><p>Personal portfolio.<br>Not a landing page. No pitch, no funnel.<br>Built by the person who built the projects.</p></div></div>
+      <div class="baseline"><span>DEN<a href="/v1">PREVIOUS SITE →</a></span><span>DEN · 2026</span></div>
+    </footer>
+  </div>
+</PortfolioLayout>
 
-<style>
-  :global(html) {
-    scroll-behavior: smooth;
-  }
+<script>
+  import '@/scripts/portfolio-motion.js';
+</script>
 
-  :global(body) {
-    overflow-x: hidden;
-  }
+<style is:global>
+  .foot-columns .cta { margin-top: 14px; }
+  /* Same 10px gap above as the reference credit lines have. */
+  .foot-columns .ui-credits { margin-top: 10px; }
+  .fluid-slot { position: relative; overflow: hidden; }
+  /* 2px #001CAE outline outside the glyphs: a 4px stroke painted under the fill, so glyph width doesn't shrink. */
+  .band h2 { -webkit-text-stroke: 4px #001CAE; paint-order: stroke fill; }
+  .baseline a { margin-left: 24px; text-decoration: none; }
+  .baseline a:focus-visible { outline: 1px solid #8A87FF; outline-offset: 3px; }
+  .contribution code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .92em; }
 </style>

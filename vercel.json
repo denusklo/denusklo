@@ -1,0 +1,11 @@
+{
+  "redirects": [
+    { "source": "/about", "destination": "/v1/about", "permanent": true },
+    { "source": "/blog", "destination": "/v1/blog", "permanent": true },
+    { "source": "/posts/:slug", "destination": "/v1/posts/:slug", "permanent": true },
+    { "source": "/tags", "destination": "/v1/tags", "permanent": true },
+    { "source": "/tags/:tag", "destination": "/v1/tags/:tag", "permanent": true },
+    { "source": "/vue", "destination": "/v1/vue", "permanent": true },
+    { "source": "/vue/:path*", "destination": "/v1/vue/:path*", "permanent": true }
+  ]
+}

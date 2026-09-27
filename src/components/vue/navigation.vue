@@ -9,10 +9,10 @@
       </button>
       <ul v-if="isMenuOpen">
         <li>
-          <a href="/">Home</a>
+          <a href="/v1">Home</a>
         </li>
         <li>
-          <a href="/about">About</a>
+          <a href="/v1/about">About</a>
         </li>
       </ul>
     </nav>

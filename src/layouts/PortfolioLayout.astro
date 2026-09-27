@@ -1,0 +1,112 @@
+---
+// The first-visit loader below is a vanilla port of the "Loading State" primitive (Drive variant)
+// from Beautiful UI, https://www.beautifului.dev/, used under the MIT License:
+//
+// MIT License
+//
+// Copyright (c) 2026 Shane Levine
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+import SEO from '@/components/SEO.astro';
+
+const { title, description, image = '/portfolio/hero-poster.jpg' } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <SEO title={title} description={description} image={image} />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪡</text></svg>" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#101014" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <script is:inline>
+      // First-visit loader: once per session, on whichever new-design page is entered first.
+      // Injected before first paint; visitors without JS never see it.
+      (() => {
+        try {
+          if (sessionStorage.getItem('den-loader')) return;
+          sessionStorage.setItem('den-loader', '1');
+        } catch { return; }
+        const LOADER_MIN_MS = 900, LOADER_MAX_MS = 1800, LOADER_CAP_MS = 3000;
+        const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const start = performance.now();
+        const duration = LOADER_MIN_MS + Math.random() * (LOADER_MAX_MS - LOADER_MIN_MS);
+        // "Drive" chevron: each cell's delay is (column + distance from the middle row) × 90ms.
+        const delays = Array.from({ length: 9 }, (_, i) => (i % 3 + Math.abs(Math.floor(i / 3) - 1)) * 90);
+        const loader = document.createElement('div');
+        loader.className = 'loader';
+        loader.setAttribute('role', 'status');
+        loader.setAttribute('aria-live', 'polite');
+        loader.innerHTML = `<div class="loader-grid" aria-hidden="true">${delays.map(d => `<i style="animation-delay:${d}ms"></i>`).join('')}</div><span class="loader-label">Loading</span><span class="loader-time" aria-hidden="true">0.0s</span>`;
+        document.body.prepend(loader);
+        document.documentElement.classList.add('is-loading');
+        // Keep the home page's smooth-scroll wheel handler from moving the page underneath.
+        const block = event => { event.preventDefault(); event.stopImmediatePropagation(); };
+        addEventListener('wheel', block, { capture: true, passive: false });
+        const time = loader.querySelector('.loader-time');
+        const timer = setInterval(() => { time.textContent = `${((performance.now() - start) / 1000).toFixed(1)}s`; }, 100);
+        const heroReady = () => {
+          const video = document.querySelector('#hero video');
+          return reduce || !video || video.readyState >= 3;
+        };
+        const check = () => {
+          const elapsed = performance.now() - start;
+          if (elapsed < LOADER_CAP_MS && (elapsed < duration || !heroReady())) return setTimeout(check, 50);
+          clearInterval(timer);
+          removeEventListener('wheel', block, { capture: true });
+          document.documentElement.classList.remove('is-loading');
+          scrollTo(0, 0);
+          loader.classList.add('is-done');
+          setTimeout(() => loader.remove(), reduce ? 0 : 300);
+        };
+        setTimeout(check, duration);
+      })();
+    </script>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  /* Side gutters for the new pages below desktop width, clear of notches in landscape. */
+  @media (max-width:1199px){:root{--gutter:max(32px, env(safe-area-inset-left), env(safe-area-inset-right))}}
+  @media (max-width:767px){:root{--gutter:max(20px, env(safe-area-inset-left), env(safe-area-inset-right))}}
+  html.is-loading{overflow:hidden}
+  .loader{--ink:#EDEDF2;--ink-3:#A0A0AA;position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;gap:10px;background:#101014;transition:opacity .3s ease}
+  .loader.is-done{opacity:0;pointer-events:none}
+  .loader-grid{display:grid;grid-template-columns:repeat(3,4px);gap:1.5px}
+  .loader-grid i{width:4px;height:4px;border-radius:1px;background:var(--ink);opacity:.15;animation:pixel-on 650ms ease-in-out infinite}
+  .loader-label{font-size:13px;font-weight:500;color:transparent;background:linear-gradient(90deg,var(--ink-3) 35%,var(--ink) 50%,var(--ink-3) 65%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;animation:shimmer-text 1.4s linear infinite}
+  .loader-time{font:12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink-3);font-variant-numeric:tabular-nums}
+  @keyframes pixel-on{0%,100%{opacity:.15}30%{opacity:1}}
+  @keyframes shimmer-text{from{background-position:100% 0}to{background-position:-100% 0}}
+  @media (prefers-reduced-motion:reduce){
+    .loader,.loader *{animation:none!important;transition:none!important}
+    .loader-label{color:var(--ink-3);background:none}
+  }
+</style>

@@ -1,0 +1,23 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import DroidLanding from '@/components/vue/DroidLanding.vue';
+import greetings from '@/data/greetings.js';
+
+const pageTitle = "Den Kong | Fullstack Developer";
+---
+<BaseLayout pageTitle={pageTitle}>
+  <DroidLanding
+    client:load
+    greetings={greetings}
+  />
+</BaseLayout>
+
+<style>
+  :global(html) {
+    scroll-behavior: smooth;
+  }
+
+  :global(body) {
+    overflow-x: hidden;
+  }
+</style>

@@ -148,7 +148,7 @@
                 modern, performant web applications with exceptional user experiences.
               </p>
               <a
-                href="/about"
+                href="/v1/about"
                 class="about-link inline-flex items-center gap-2 font-mono text-sm transition-all duration-300 hover:gap-4"
                 :class="linkClasses"
               >
@@ -503,21 +503,21 @@ const blogPosts = [
     excerpt: 'Learn how to build fast, content-focused websites with Astro.',
     date: '2024.01.15',
     tags: ['astro', 'tutorial'],
-    link: '/blog/getting-started-with-astro'
+    link: '/v1/blog/getting-started-with-astro'
   },
   {
     title: 'Vue 3 Composition API Guide',
     excerpt: 'Master the Composition API and build better Vue applications.',
     date: '2024.01.10',
     tags: ['vue', 'javascript'],
-    link: '/blog/vue3-composition-api'
+    link: '/v1/blog/vue3-composition-api'
   },
   {
     title: 'Laravel Best Practices',
     excerpt: 'Essential tips and patterns for building scalable Laravel applications.',
     date: '2024.01.05',
     tags: ['laravel', 'php'],
-    link: '/blog/laravel-best-practices'
+    link: '/v1/blog/laravel-best-practices'
   }
 ]
 
