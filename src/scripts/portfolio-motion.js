@@ -66,7 +66,8 @@
     waterfall.style.setProperty('--wf-w', `${logicalWidth}px`);
     waterfall.style.setProperty('--wf-scale', String(waterfall.clientWidth / logicalWidth));
   };
-  new ResizeObserver(fitWaterfall).observe(waterfall);
+  // Deferred a frame: the new scale changes the observed element's height, which would re-trigger the observer mid-delivery.
+  new ResizeObserver(() => requestAnimationFrame(fitWaterfall)).observe(waterfall);
 
   const hero = document.getElementById('hero');
   const track = document.getElementById('hero-track');
@@ -243,7 +244,10 @@
       shown = index;
     };
     const size = () => {
-      const dpr = Math.min(devicePixelRatio || 1, 2);
+      // Never upscale the 1280x720 frames inside the canvas: past the source's own resolution the
+      // extra pixels add nothing, and drawing them every frame is what costs on a phone.
+      const cover = Math.max(canvas.clientWidth / 1280, canvas.clientHeight / 720);
+      const dpr = Math.min(devicePixelRatio || 1, 2, 1 / cover);
       canvas.width = Math.round(canvas.clientWidth * dpr);
       canvas.height = Math.round(canvas.clientHeight * dpr);
       shown = -1;

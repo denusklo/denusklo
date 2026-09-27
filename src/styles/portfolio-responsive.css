@@ -48,7 +48,9 @@
   }
   .band-field{top:calc(700px + var(--field-top));left:var(--gutter);width:calc(100% - 2 * var(--gutter));height:auto;aspect-ratio:1130/440}
   .band-rule{top:calc(var(--field-top) + var(--field-h) + var(--field-gap) / 2)}
-  .band h2{left:var(--gutter);bottom:var(--band-bottom);font-size:var(--band-font);line-height:1.053;letter-spacing:-.033em;-webkit-text-stroke-width:calc(var(--band-font) * 4 / 76)}
+  .band h2{left:var(--gutter);bottom:var(--band-bottom);font-size:var(--band-font);line-height:1.053;letter-spacing:-.033em}
+  /* .page raises specificity over the page's 4px outline shorthand, which loads after this file. */
+  .page .band h2{-webkit-text-stroke-width:calc(var(--band-font) * 4 / 76)}
 
   .also{padding-top:clamp(56px, 7vw, 96px);padding-bottom:clamp(40px, 4vw, 60px)}
   .secondary-grid{grid-template-columns:1fr 1fr;gap:clamp(20px, 2.5vw, 32px)}

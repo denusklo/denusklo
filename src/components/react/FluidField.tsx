@@ -179,6 +179,7 @@ const FluidField = ({
     gl.uniform2f(gl.getUniformLocation(program, 'u_highlight'), highlight[0], highlight[1])
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const coarse = window.matchMedia('(pointer: coarse)').matches
     // Elapsed time only advances while running, so a pause doesn't jump the fluid.
     let elapsed = 0
     let last = 0
@@ -207,7 +208,8 @@ const FluidField = ({
     }
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      // The field is soft, so touch devices render it at 1x and let the compositor scale; saves most of the GPU work.
+      const dpr = Math.min(window.devicePixelRatio || 1, coarse ? 1 : 2)
       const w = Math.max(1, Math.round(wrap.clientWidth * dpr))
       const h = Math.max(1, Math.round(wrap.clientHeight * dpr))
       canvas.width = w
