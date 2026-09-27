@@ -40,12 +40,17 @@ const scenarios = {
     rule: '蘭布達: exactly 7 first-batch combos, with columns 1 and 6 sealed (runes there can’t be cleared).',
     flags: '--first-combos 7', result: 'PLANNER=failed reason=no-feasible-target. The demand was provably impossible on this board, so no touch was sent. No wasted turn.' },
 };
-const chapters = [
+const chapters: [string, string[]][] = [
   ['Learning the rules', ['01', '02', '06']],
   ['Working within limits', ['07', '09', '05']],
   ['Changing the board', ['03', '04', '08']],
-] as const;
-const data = Object.fromEntries(chapters.flatMap(([name, ids]) => ids.map(id => [id, {
+];
+// Spare slots render only once they have data. To add scenario 10, add a '10' entry to `scenarios`
+// above and put 10-*.mp4, 10-poster.webp (and any check page) in public/portfolio/autospinner/scenarios/.
+// It then appears under "More scenarios", after 08 in PREV / NEXT.
+const spares = ['10', '11', '12'].filter(id => id in scenarios);
+const sections = spares.length ? [...chapters, ['More scenarios', spares] as [string, string[]]] : chapters;
+const data = Object.fromEntries(sections.flatMap(([name, ids]) => ids.map(id => [id, {
   ...scenarios[id],
   id,
   chapter: name.toUpperCase(),
@@ -53,13 +58,13 @@ const data = Object.fromEntries(chapters.flatMap(([name, ids]) => ids.map(id => 
   poster: `${DIR}${id}-poster.webp`,
   check: 'check' in scenarios[id] ? `${DIR}check/${scenarios[id].check}` : '',
 }])));
-const order = chapters.flatMap(([, ids]) => ids);
+const order = sections.flatMap(([, ids]) => ids);
 ---
 <section class="cs-section scenarios" id="scenarios" data-section="Scenarios">
   <div class="section-head"><h2>SCENARIOS</h2><span>REAL PHONE RECORDINGS</span></div>
-  {chapters.map(([name, ids], i) => (
+  {sections.map(([name, ids], i) => (
     <div class="sc-chapter">
-      <p class="accent-label sc-eyebrow">CHAPTER {i + 1}</p>
+      <p class="accent-label sc-eyebrow">{i < chapters.length ? `CHAPTER ${i + 1}` : 'MORE'}</p>
       <h3 class="sc-chapter-title">{name}</h3>
       <div class="sc-grid">
         {ids.map(id => (
@@ -76,18 +81,6 @@ const order = chapters.flatMap(([, ids]) => ids);
       </div>
     </div>
   ))}
-  <div class="sc-chapter">
-    <p class="accent-label sc-eyebrow">SPARE</p>
-    <h3 class="sc-chapter-title">Future scenarios</h3>
-    <div class="sc-grid" aria-hidden="true">
-      {['10', '11', '12'].map(id => (
-        <div class="sc-card sc-spare">
-          <span class="sc-thumb">EMPTY · FUTURE SCENARIO</span>
-          <span class="sc-body"><span class="sc-meta">{id}</span></span>
-        </div>
-      ))}
-    </div>
-  </div>
 </section>
 
 <dialog class="sc-modal" aria-labelledby="sc-m-title">
@@ -266,15 +259,13 @@ const order = chapters.flatMap(([, ids]) => ids);
   .sc-chapter-title{font-size:28px;font-weight:600;letter-spacing:-.01em;margin:10px 0 24px}
   .sc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
   .sc-card{display:flex;flex-direction:column;padding:0;background:#1A1A20;border:1px solid #2C2C36;color:#EDEDF2;font:inherit;text-align:left;cursor:pointer;transition:border-color .2s,transform .2s}
-  .sc-card:not(.sc-spare):hover,.sc-card:focus-visible{border-color:#4B47FF;outline:none;transform:translateY(-2px)}
+  .sc-card:hover,.sc-card:focus-visible{border-color:#4B47FF;outline:none;transform:translateY(-2px)}
   .sc-thumb{display:block;width:100%;height:240px;object-fit:cover;background:#000;border-bottom:1px solid #2C2C36}
   .sc-body{display:flex;flex-direction:column;gap:8px;flex:1;padding:20px 20px 22px}
   .sc-meta{font:12px/1 ui-monospace,"JetBrains Mono",Menlo,monospace;letter-spacing:.06em;color:#A0A0AA;margin:0}
   .sc-title{font-size:20px;font-weight:600}
   .sc-rule{min-height:44px;font-size:14px;line-height:1.55;color:#A0A0AA}
   .sc-view{margin-top:auto;font-size:13px;letter-spacing:.08em;color:#8A87FF}
-  .sc-spare{background:transparent;border-style:dashed;cursor:default;min-height:400px}
-  .sc-spare .sc-thumb{display:grid;place-items:center;background:transparent;border-bottom:1px dashed #2C2C36;font:12px ui-monospace,"JetBrains Mono",Menlo,monospace;letter-spacing:.1em;color:#A0A0AA}
 
   /* Modal: backdrop and timing from the credits modal (.ref-overlay). */
   html.sc-modal-open{overflow:hidden}
