@@ -16,8 +16,8 @@ const scenarios = {
     rule: '龍陽君: exactly 5 first-batch combos. On top of that, we asked for a 5-rune wood group.',
     flags: '--first-combos 5 --want-group wood:5', result: 'Both goals met in one drag. EXCEED BILLION. Boss down. (Asking for water instead was refused, since it wasn’t possible on that board.)' },
   '07': { title: 'Sealed columns', video: '07-sealed-columns.mp4',
-    summary: 'The edge columns are sealed. Exactly 6 combos with only 4 columns.',
-    rule: '馬超: exactly 6 first-batch combos. Columns 1 and 6 are sealed and can’t be moved through.',
+    summary: 'The edge columns are sealed: runes there can’t be cleared. Exactly 6 combos anyway.',
+    rule: '馬超: exactly 6 first-batch combos. Columns 1 and 6 are sealed: the drag can pass through them, but runes there can’t be cleared.',
     flags: '--first-combos 6', result: 'Sealed columns detected automatically. Exactly 6 first-batch combos. EXCEED BILLION 766,920,899,400. Boss down.' },
   '09': { title: 'Start here, end there', video: '09-start-end.mp4', check: '09-start-end-check.html',
     summary: 'The drag must start on GO, end on the red cell, and clear every heart.',
@@ -36,8 +36,8 @@ const scenarios = {
     rule: '驪姬: drag time cut to 2 s. Under 7 combos, no damage. The first batch must clear every water rune.',
     flags: '--rearrange --clear-all water --first-combos 7+', result: '16 separate drags. First batch: 7 combos (10 total). Water 4/4. 2.98 trillion damage. Boss down.' },
   '08': { title: 'Knowing when not to move', video: '08-refused.mp4', check: '08-sealed-check.html',
-    summary: 'Exactly 7 combos with two sealed columns. Impossible, so it refused.',
-    rule: '蘭布達: exactly 7 first-batch combos, with columns 1 and 6 sealed.',
+    summary: 'Exactly 7 combos, but the edge columns can’t be cleared. Impossible, so it refused.',
+    rule: '蘭布達: exactly 7 first-batch combos, with columns 1 and 6 sealed (runes there can’t be cleared).',
     flags: '--first-combos 7', result: 'PLANNER=failed reason=no-feasible-target. The demand was provably impossible on this board, so no touch was sent. No wasted turn.' },
 };
 const chapters = [
@@ -92,6 +92,13 @@ const order = chapters.flatMap(([, ids]) => ids);
 
 <dialog class="sc-modal" aria-labelledby="sc-m-title">
   <div class="sc-panel">
+    <div class="sc-checkbar">
+      <div><p class="sc-meta" id="sc-cb-meta"></p><p class="sc-cb-title" id="sc-cb-title"></p></div>
+      <div class="sc-cb-actions">
+        <button class="sc-btn" type="button" id="sc-back">← <span class="sc-long">BACK TO </span>VIDEO</button>
+        <button class="sc-close" type="button" aria-label="Close">×</button>
+      </div>
+    </div>
     <div class="sc-media"></div>
     <div class="sc-info">
       <div class="sc-top">
@@ -124,6 +131,9 @@ const order = chapters.flatMap(([, ids]) => ids);
   const CLOSE_MS = 150; // matches the credits modal's --modal-close-dur
   let current = '', closing = 0;
 
+  const panel = dialog.querySelector<HTMLElement>('.sc-panel')!;
+  let checkMode = false;
+
   // Media only exists while the modal is open, so nothing loads before a click.
   const showVideo = () => {
     const s = data[current];
@@ -131,25 +141,52 @@ const order = chapters.flatMap(([, ids]) => ids);
     const video = Object.assign(document.createElement('video'), { muted: true, playsInline: true, controls: true, autoplay: true, preload: 'none', poster: s.poster, src: s.video });
     video.setAttribute('aria-label', `Recording: ${s.title}`);
     media.append(video);
-    saw.textContent = 'SEE WHAT IT SAW →';
-  };
-  const showCheck = () => {
-    const s = data[current];
-    media.innerHTML = '';
-    const frame = Object.assign(document.createElement('iframe'), { loading: 'lazy', src: s.check, title: `What it saw: ${s.title}` });
-    media.append(frame);
-    saw.textContent = '← BACK TO VIDEO';
   };
   const clearMedia = () => {
     media.querySelector('video')?.removeAttribute('src');
     media.innerHTML = '';
+  };
+  // The check pages are built for ~1208px (two 540px boards side by side, stacking below 1180px).
+  // Give the iframe that natural width and scale it down to fit, so it never gets squashed.
+  const fitCheck = () => {
+    const frame = media.querySelector('iframe');
+    if (!frame) return;
+    const W = media.clientWidth, H = media.clientHeight;
+    const natural = W >= 800 ? 1208 : 588;
+    const scale = Math.min(1, W / natural);
+    frame.style.width = `${scale === 1 ? W : natural}px`;
+    frame.style.height = `${H / scale}px`;
+    frame.style.transform = `scale(${scale})`;
+  };
+  addEventListener('resize', fitCheck);
+
+  // Check mode widens the modal, hides the info column and fills it with the check page.
+  const applyMode = (check: boolean) => {
+    const s = data[current];
+    checkMode = check;
+    panel.classList.toggle('sc-wide', check);
+    history.replaceState(null, '', `#${current}${check ? '-check' : ''}`);
+    if (!check) return showVideo();
+    $('sc-cb-meta').textContent = `${current} · WHAT IT SAW`;
+    $('sc-cb-title').textContent = s.title;
+    clearMedia();
+    media.append(Object.assign(document.createElement('iframe'), { loading: 'lazy', src: s.check, title: `What it saw: ${s.title}` }));
+    fitCheck();
+  };
+  const setMode = (check: boolean) => {
+    panel.classList.add('sc-swap');
+    setTimeout(() => {
+      applyMode(check);
+      panel.classList.remove('sc-swap');
+      (check ? $('sc-back') : saw).focus({ preventScroll: true });
+    }, 150);
   };
 
   const setNav = (button: HTMLButtonElement, id: string | undefined) => {
     button.disabled = !id;
     button.querySelector('span')!.textContent = id ? `${id} ${data[id].title}` : '';
   };
-  const render = (id: string) => {
+  const render = (id: string, check = false) => {
     current = id;
     const s = data[id], i = order.indexOf(id);
     $('sc-m-meta').textContent = `${id} · ${s.chapter}`;
@@ -161,20 +198,20 @@ const order = chapters.flatMap(([, ids]) => ids);
     setNav(prev, order[i - 1]);
     setNav(next, order[i + 1]);
     if ((document.activeElement as HTMLButtonElement | null)?.disabled) (prev.disabled ? next : prev).focus(); // a disabled button drops focus out of the modal
-    history.replaceState(null, '', `#${id}`);
-    showVideo();
+    applyMode(check && !!s.check);
   };
 
-  const open = (id: string) => {
+  const open = (id: string, check = false) => {
     clearTimeout(closing);
     dialog.classList.remove('is-closing');
-    render(id);
+    render(id, check);
     if (!dialog.open) {
       dialog.showModal();
       document.documentElement.classList.add('sc-modal-open');
       requestAnimationFrame(() => dialog.classList.add('is-open'));
+      fitCheck(); // the media area has no size until the dialog is shown
     }
-    dialog.querySelector<HTMLElement>('.sc-close')!.focus({ preventScroll: true }); // phones: keep the video in view
+    (checkMode ? $('sc-back') : dialog.querySelector<HTMLElement>('.sc-info .sc-close')!).focus({ preventScroll: true }); // phones: keep the video in view
   };
   const close = () => {
     if (!dialog.open || dialog.classList.contains('is-closing')) return;
@@ -184,6 +221,8 @@ const order = chapters.flatMap(([, ids]) => ids);
     closing = window.setTimeout(() => {
       dialog.close();
       dialog.classList.remove('is-closing');
+      panel.classList.remove('sc-wide');
+      checkMode = false;
       document.documentElement.classList.remove('sc-modal-open');
       clearMedia();
       card?.focus();
@@ -191,19 +230,31 @@ const order = chapters.flatMap(([, ids]) => ids);
   };
 
   document.querySelectorAll<HTMLElement>('[data-scenario]').forEach(card => card.addEventListener('click', () => open(card.dataset.scenario!)));
-  dialog.querySelector('.sc-close')!.addEventListener('click', close);
-  dialog.addEventListener('cancel', event => { event.preventDefault(); close(); }); // Esc: animate instead of snapping shut
+  dialog.querySelectorAll('.sc-close').forEach(button => button.addEventListener('click', close));
+  dialog.addEventListener('cancel', event => { event.preventDefault(); checkMode ? setMode(false) : close(); }); // Esc: back to the video first, then close
   dialog.addEventListener('click', event => { if (event.target === dialog) close(); }); // the dialog box itself is only the backdrop area
-  saw.addEventListener('click', () => (media.querySelector('iframe') ? showVideo() : showCheck()));
+  saw.addEventListener('click', () => setMode(true));
+  $('sc-back').addEventListener('click', () => setMode(false));
   prev.addEventListener('click', () => render(order[order.indexOf(current) - 1]));
   next.addEventListener('click', () => render(order[order.indexOf(current) + 1]));
   document.addEventListener('keydown', event => {
-    if (!dialog.open || (event.target as Element).tagName === 'VIDEO') return; // arrows seek the video
+    if (!dialog.open) return;
+    if (event.key === 'Tab') { // keep focus inside the modal, skipping hidden controls
+      const focusable = [...dialog.querySelectorAll<HTMLElement>('button:not(:disabled), video, iframe')].filter(el => el.offsetParent !== null);
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+      return;
+    }
+    if (checkMode || (event.target as Element).tagName === 'VIDEO') return; // arrows seek the video
     if (event.key === 'ArrowLeft' && !prev.disabled) prev.click();
     if (event.key === 'ArrowRight' && !next.disabled) next.click();
   });
 
-  const fromHash = () => { const id = location.hash.slice(1); if (data[id]) open(id); };
+  const fromHash = () => {
+    const [id, mode] = location.hash.slice(1).split('-');
+    if (data[id]) open(id, mode === 'check');
+  };
   addEventListener('hashchange', fromHash);
   fromHash();
 </script>
@@ -231,8 +282,8 @@ const order = chapters.flatMap(([, ids]) => ids);
   .sc-modal:not([open]){display:none}
   .sc-modal::backdrop{background:rgb(16 16 20 / .8)}
   .sc-modal.is-open{opacity:1;transition-duration:250ms}
-  .sc-panel{width:min(1000px,100%);display:grid;grid-template-columns:360px 1fr;background:#1A1A20;border:1px solid #2C2C36;box-shadow:0 24px 80px rgb(0 0 0 / .5);transform:scale(.96);transition:transform 150ms cubic-bezier(0.22, 1, 0.36, 1)}
-  .sc-modal.is-open .sc-panel{transform:none;transition-duration:250ms}
+  .sc-panel{width:min(1000px,100%);display:grid;grid-template-columns:360px 1fr;background:#1A1A20;border:1px solid #2C2C36;box-shadow:0 24px 80px rgb(0 0 0 / .5);transform:scale(.96);transition:transform 150ms cubic-bezier(0.22, 1, 0.36, 1),opacity 150ms ease}
+  .sc-modal.is-open .sc-panel{transform:none;transition-duration:250ms,150ms}
   .sc-media{position:relative;width:360px;aspect-ratio:9/19.5;background:#000}
   .sc-media video,.sc-media iframe{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:contain;background:#000}
   .sc-info{display:flex;flex-direction:column;gap:20px;padding:28px 32px}
@@ -251,6 +302,17 @@ const order = chapters.flatMap(([, ids]) => ids);
   .sc-nav small{font-size:10px;letter-spacing:.12em;color:#A0A0AA}
   .sc-nav .sc-btn:last-child{align-items:flex-end;text-align:right}
   .sc-nav .sc-btn:disabled{opacity:.3;cursor:default;border-color:#2C2C36;color:#A0A0AA}
+  /* Check mode: the modal widens and the check page fills it. */
+  .sc-panel.sc-swap{opacity:0}
+  .sc-checkbar{display:none}
+  .sc-panel.sc-wide{width:min(1260px, 100vw - 48px);height:calc(100dvh - 48px);grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);overflow:hidden}
+  .sc-panel.sc-wide .sc-info{display:none}
+  .sc-panel.sc-wide .sc-checkbar{display:flex;align-items:center;justify-content:space-between;gap:16px;min-width:0;padding:14px 20px;border-bottom:1px solid #2C2C36}
+  .sc-checkbar>div:first-child{min-width:0}
+  .sc-cb-title{margin:6px 0 0;font-size:18px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sc-cb-actions{display:flex;flex:none;gap:12px;align-items:center}
+  .sc-panel.sc-wide .sc-media{width:100%;height:100%;max-width:none;aspect-ratio:auto;margin:0;overflow:auto;background:#11151b}
+  .sc-panel.sc-wide .sc-media iframe{inset:auto;top:0;left:0;transform-origin:0 0}
   .sc-card:focus-visible,.sc-btn:focus-visible,.sc-close:focus-visible{outline:2px solid #8A87FF;outline-offset:2px}
   @media (prefers-reduced-motion:reduce){.sc-modal,.sc-panel,.sc-card{transition:none!important}}
   @media (max-width:900px){
@@ -261,6 +323,12 @@ const order = chapters.flatMap(([, ids]) => ids);
     .sc-info{padding:24px 20px}
   }
   @media (max-width:600px){
+    .sc-modal{padding:8px}
+    .sc-panel.sc-wide{width:calc(100vw - 16px);height:calc(100dvh - 16px)}
+    .sc-panel.sc-wide .sc-checkbar{padding:10px 12px}
+    .sc-cb-title{font-size:16px}
+    #sc-back{padding:10px 12px;white-space:nowrap}
+    .sc-long{display:none}
     .sc-grid{grid-template-columns:1fr}
     .sc-chapter-title{font-size:24px}
     .sc-m-title{font-size:26px}
