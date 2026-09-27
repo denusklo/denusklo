@@ -48,10 +48,12 @@ export function mount(stage) {
     layers.forEach(l => rig.add(l));
 
     let camDist = 16.5;
-    function aimCamera(open) {
-      // rise with the stack so the top plate never leaves the frame
-      const cy = 1.4 + open * 1.25;
-      camera.position.set(camDist * 0.55, camDist * 0.52 + cy, camDist * 0.66);
+    function aimCamera(open, gap) {
+      // stay centred on the middle plate and pull back as the stack opens,
+      // so neither the top (03) nor the bottom (01) plate leaves the frame
+      const cy = gap + TOP * 0.5 - 0.3;   // -0.3: sit the model a little higher, even margins top and bottom
+      const d = camDist * (1 + 0.22 * open);
+      camera.position.set(d * 0.55, d * 0.52 + cy, d * 0.66);
       camera.lookAt(0, cy, 0);
     }
     function resize() {
@@ -230,7 +232,7 @@ export function mount(stage) {
       open += (openTarget - open) * Math.min(1, dt / 160);
       const gap = 1.05 + open * 1.25;
       layers[0].position.y = 0; layers[1].position.y = gap; layers[2].position.y = gap * 2;
-      aimCamera(open);
+      aimCamera(open, gap);
 
       // idle sway + pointer tilt
       const sway = reduce ? 0 : Math.sin(now / 2600) * 0.12;
