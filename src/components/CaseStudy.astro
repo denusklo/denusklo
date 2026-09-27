@@ -9,7 +9,7 @@ const { study } = Astro.props;
 <ScrollProgress />
 <main class="cs">
   <section class="cs-intro" id="overview" data-section="Overview">
-    <p class="accent-label">CASE STUDY · {study.number}</p>
+    <p class="accent-label">CASE STUDY {study.number}</p>
     <h1>{study.name}</h1>
     <p class="lead">{study.what}</p>
     <p class="tags">{study.stack.map(s => s.name).join(' · ')}<span>{study.platform}</span></p>
@@ -41,6 +41,7 @@ const { study } = Astro.props;
       ))}
     </ol>
   </section>
+  <slot />
   <section class="cs-section" id="engineering" data-section="The engineering">
     <div class="section-head"><h2>THE ENGINEERING</h2></div>
     <div class="notes">
@@ -63,7 +64,7 @@ const { study } = Astro.props;
       <div><p class="small-label">CODE</p><a class="quiet" href="https://github.com/denusklo">github.com/denusklo ↗</a></div>
       <div><p class="small-label">BACK</p><a class="quiet" href="/">← Home</a><p class="quiet">All work, the band and the colophon live on the home page.</p></div>
     </div>
-    <div class="baseline"><span>DEN · 2026<a href="/v1">PREVIOUS SITE →</a></span><span>CASE STUDY · {study.number} / 02</span></div>
+    <div class="baseline"><span>DEN · 2026<a href="/v1">PREVIOUS SITE →</a></span><span>CASE STUDY {study.number} / 02</span></div>
   </div>
 </footer>
 

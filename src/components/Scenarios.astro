@@ -1,0 +1,327 @@
+---
+// autospinner scenarios: cards in chapters, each opening a <dialog> with the recording.
+// Copy is word for word from prototype/projects/autospinner-scenarios.html.
+const DIR = '/portfolio/autospinner/scenarios/';
+const scenarios = {
+  '01': { title: 'Read → solve → spin', video: '01-base.mp4',
+    summary: 'Max combos, no boss rule told. Lots of combos, zero damage.',
+    rule: '關銀屏 only takes damage if the first batch makes exactly 4 combos. The solver wasn’t told.',
+    flags: '(no flags)', result: '7 combos, but only 2 in the first batch, so the shield held and the boss took no damage. The problem: a solver that doesn’t know the rule.' },
+  '02': { title: 'Exact combo count', video: '02-exact-combos.mp4',
+    summary: 'The shield breaks only on exactly 4 first-batch combos.',
+    rule: '關銀屏: exactly 4 first-batch combos, not 3, not 5.',
+    flags: '--first-combos 4', result: 'First batch: exactly 4 combos. EXCEED BILLION 198,029,834,400. Boss down.' },
+  '06': { title: 'Multiple goals at once', video: '06-multiple-goals.mp4',
+    summary: 'Exactly 5 first-batch combos, and a 5-rune wood group too.',
+    rule: '龍陽君: exactly 5 first-batch combos. On top of that, we asked for a 5-rune wood group.',
+    flags: '--first-combos 5 --want-group wood:5', result: 'Both goals met in one drag. EXCEED BILLION. Boss down. (Asking for water instead was refused, since it wasn’t possible on that board.)' },
+  '07': { title: 'Sealed columns', video: '07-sealed-columns.mp4',
+    summary: 'The edge columns are sealed: runes there can’t be cleared. Exactly 6 combos anyway.',
+    rule: '馬超: exactly 6 first-batch combos. Columns 1 and 6 are sealed: the drag can pass through them, but runes there can’t be cleared.',
+    flags: '--first-combos 6', result: 'Sealed columns detected automatically. Exactly 6 first-batch combos. EXCEED BILLION 766,920,899,400. Boss down.' },
+  '09': { title: 'Start here, end there', video: '09-start-end.mp4', check: '09-start-end-check.html',
+    summary: 'The drag must start on GO, end on the red cell, and clear every heart.',
+    rule: '丹尼絲: start on the GO marker and end on the red marker, or no attack. Clear every heart in the first batch, or only 1 damage.',
+    flags: '--start 3,2 --end 0,4 --clear-all heart', result: 'A 37-move path from GO to the red cell. Hearts 3/3 cleared. Boss down.' },
+  '05': { title: 'Fire route', video: '05-fire-route.mp4', check: '05-fire-route-check.html',
+    summary: 'Every touched cell burns. Never cross your own path, clear every wood.',
+    rule: '青龍: every cell the drag touches burns; touching it again costs 5000 HP. Clear every wood rune in the first batch, or only 1 damage.',
+    flags: '--fire-route 30 --clear-all wood', result: '22 moves that never cross. Wood 8/8. HP stayed full: zero burn damage. EXCEED BILLION 69,471,576,400. Boss down.' },
+  '03': { title: 'Convert, then rearrange', video: '03-convert-rearrange.mp4', check: '03-convert-check.html',
+    summary: 'A convert skill, then free rearranging for exactly 8 combos.',
+    rule: '呂雉: exactly 8 first-batch combos.',
+    flags: '--rearrange --convert wood:max --first-combos 8', result: '24 separate drags while the board was frozen. First batch: 8 combos. EXCEED BILLION 776,472,799,400. Boss down.' },
+  '04': { title: 'Rearrange', video: '04-rearrange.mp4', check: '04-rearrange-check.html',
+    summary: 'Drag time cut to 2 seconds. Freeze the board and swap instead.',
+    rule: '驪姬: drag time cut to 2 s. Under 7 combos, no damage. The first batch must clear every water rune.',
+    flags: '--rearrange --clear-all water --first-combos 7+', result: '16 separate drags. First batch: 7 combos (10 total). Water 4/4. 2.98 trillion damage. Boss down.' },
+  '08': { title: 'Knowing when not to move', video: '08-refused.mp4', check: '08-sealed-check.html',
+    summary: 'Exactly 7 combos, but the edge columns can’t be cleared. Impossible, so it refused.',
+    rule: '蘭布達: exactly 7 first-batch combos, with columns 1 and 6 sealed (runes there can’t be cleared).',
+    flags: '--first-combos 7', result: 'PLANNER=failed reason=no-feasible-target. The demand was provably impossible on this board, so no touch was sent. No wasted turn.' },
+};
+const chapters: [string, string[]][] = [
+  ['Learning the rules', ['01', '02', '06']],
+  ['Working within limits', ['07', '09', '05']],
+  ['Changing the board', ['03', '04', '08']],
+];
+// Spare slots render only once they have data. To add scenario 10, add a '10' entry to `scenarios`
+// above and put 10-*.mp4, 10-poster.webp (and any check page) in public/portfolio/autospinner/scenarios/.
+// It then appears under "More scenarios", after 08 in PREV / NEXT.
+const spares = ['10', '11', '12'].filter(id => id in scenarios);
+const sections = spares.length ? [...chapters, ['More scenarios', spares] as [string, string[]]] : chapters;
+const data = Object.fromEntries(sections.flatMap(([name, ids]) => ids.map(id => [id, {
+  ...scenarios[id],
+  id,
+  chapter: name.toUpperCase(),
+  video: DIR + scenarios[id].video,
+  poster: `${DIR}${id}-poster.webp`,
+  check: 'check' in scenarios[id] ? `${DIR}check/${scenarios[id].check}` : '',
+}])));
+const order = sections.flatMap(([, ids]) => ids);
+---
+<section class="cs-section scenarios" id="scenarios" data-section="Scenarios">
+  <div class="section-head"><h2>SCENARIOS</h2><span>REAL PHONE RECORDINGS</span></div>
+  {sections.map(([name, ids], i) => (
+    <div class="sc-chapter">
+      <p class="accent-label sc-eyebrow">{i < chapters.length ? `CHAPTER ${i + 1}` : 'MORE'}</p>
+      <h3 class="sc-chapter-title">{name}</h3>
+      <div class="sc-grid">
+        {ids.map(id => (
+          <button class="sc-card" type="button" data-scenario={id}>
+            <img class="sc-thumb" src={data[id].poster} alt="" loading="lazy" width="384" height="240" />
+            <span class="sc-body">
+              <span class="sc-meta">{id} · RECORDED</span>
+              <span class="sc-title">{data[id].title}</span>
+              <span class="sc-rule">{data[id].summary}</span>
+              <span class="sc-view">VIEW →</span>
+            </span>
+          </button>
+        ))}
+      </div>
+    </div>
+  ))}
+</section>
+
+<dialog class="sc-modal" aria-labelledby="sc-m-title">
+  <div class="sc-panel">
+    <div class="sc-checkbar">
+      <div><p class="sc-meta" id="sc-cb-meta"></p><p class="sc-cb-title" id="sc-cb-title"></p></div>
+      <div class="sc-cb-actions">
+        <button class="sc-btn" type="button" id="sc-back">← <span class="sc-long">BACK TO </span>VIDEO</button>
+        <button class="sc-close" type="button" aria-label="Close">×</button>
+      </div>
+    </div>
+    <div class="sc-media"></div>
+    <div class="sc-info">
+      <div class="sc-top">
+        <div>
+          <p class="sc-meta" id="sc-m-meta"></p>
+          <h2 class="sc-m-title" id="sc-m-title"></h2>
+        </div>
+        <button class="sc-close" type="button" aria-label="Close">×</button>
+      </div>
+      <div class="sc-sec"><h3>THE RULE</h3><p id="sc-m-rule"></p></div>
+      <div class="sc-sec"><h3>WHAT WE ASKED</h3><p class="sc-flags" id="sc-m-flags"></p></div>
+      <div class="sc-sec"><h3>WHAT HAPPENED</h3><p id="sc-m-result"></p></div>
+      <button class="sc-btn" type="button" id="sc-saw">SEE WHAT IT SAW →</button>
+      <div class="sc-nav">
+        <button class="sc-btn" type="button" id="sc-prev"><small>← PREV</small><span></span></button>
+        <button class="sc-btn" type="button" id="sc-next"><small>NEXT →</small><span></span></button>
+      </div>
+    </div>
+  </div>
+</dialog>
+<script type="application/json" id="sc-data" set:html={JSON.stringify({ data, order })} />
+
+<script>
+  type Scenario = { id: string; title: string; chapter: string; rule: string; flags: string; result: string; video: string; poster: string; check: string };
+  const { data, order } = JSON.parse(document.getElementById('sc-data')!.textContent!) as { data: Record<string, Scenario>; order: string[] };
+  const dialog = document.querySelector<HTMLDialogElement>('.sc-modal')!;
+  const media = dialog.querySelector<HTMLElement>('.sc-media')!;
+  const $ = (id: string) => document.getElementById(id)!;
+  const saw = $('sc-saw') as HTMLButtonElement, prev = $('sc-prev') as HTMLButtonElement, next = $('sc-next') as HTMLButtonElement;
+  const CLOSE_MS = 150; // matches the credits modal's --modal-close-dur
+  let current = '', closing = 0;
+
+  const panel = dialog.querySelector<HTMLElement>('.sc-panel')!;
+  let checkMode = false;
+
+  // Media only exists while the modal is open, so nothing loads before a click.
+  const showVideo = () => {
+    const s = data[current];
+    media.innerHTML = '';
+    const video = Object.assign(document.createElement('video'), { muted: true, playsInline: true, controls: true, autoplay: true, preload: 'none', poster: s.poster, src: s.video });
+    video.setAttribute('aria-label', `Recording: ${s.title}`);
+    media.append(video);
+  };
+  const clearMedia = () => {
+    media.querySelector('video')?.removeAttribute('src');
+    media.innerHTML = '';
+  };
+  // The check pages are built for ~1208px (two 540px boards side by side, stacking below 1180px).
+  // Give the iframe that natural width and scale it down to fit, so it never gets squashed.
+  const fitCheck = () => {
+    const frame = media.querySelector('iframe');
+    if (!frame) return;
+    const W = media.clientWidth, H = media.clientHeight;
+    const natural = W >= 800 ? 1208 : 588;
+    const scale = Math.min(1, W / natural);
+    frame.style.width = `${scale === 1 ? W : natural}px`;
+    frame.style.height = `${H / scale}px`;
+    frame.style.transform = `scale(${scale})`;
+  };
+  addEventListener('resize', fitCheck);
+
+  // Check mode widens the modal, hides the info column and fills it with the check page.
+  const applyMode = (check: boolean) => {
+    const s = data[current];
+    checkMode = check;
+    panel.classList.toggle('sc-wide', check);
+    history.replaceState(null, '', `#${current}${check ? '-check' : ''}`);
+    if (!check) return showVideo();
+    $('sc-cb-meta').textContent = `${current} · WHAT IT SAW`;
+    $('sc-cb-title').textContent = s.title;
+    clearMedia();
+    media.append(Object.assign(document.createElement('iframe'), { loading: 'lazy', src: s.check, title: `What it saw: ${s.title}` }));
+    fitCheck();
+  };
+  const setMode = (check: boolean) => {
+    panel.classList.add('sc-swap');
+    setTimeout(() => {
+      applyMode(check);
+      panel.classList.remove('sc-swap');
+      (check ? $('sc-back') : saw).focus({ preventScroll: true });
+    }, 150);
+  };
+
+  const setNav = (button: HTMLButtonElement, id: string | undefined) => {
+    button.disabled = !id;
+    button.querySelector('span')!.textContent = id ? `${id} ${data[id].title}` : '';
+  };
+  const render = (id: string, check = false) => {
+    current = id;
+    const s = data[id], i = order.indexOf(id);
+    $('sc-m-meta').textContent = `${id} · ${s.chapter}`;
+    $('sc-m-title').textContent = s.title;
+    $('sc-m-rule').textContent = s.rule;
+    $('sc-m-flags').textContent = s.flags;
+    $('sc-m-result').textContent = s.result;
+    saw.hidden = !s.check;
+    setNav(prev, order[i - 1]);
+    setNav(next, order[i + 1]);
+    if ((document.activeElement as HTMLButtonElement | null)?.disabled) (prev.disabled ? next : prev).focus(); // a disabled button drops focus out of the modal
+    applyMode(check && !!s.check);
+  };
+
+  const open = (id: string, check = false) => {
+    clearTimeout(closing);
+    dialog.classList.remove('is-closing');
+    render(id, check);
+    if (!dialog.open) {
+      dialog.showModal();
+      document.documentElement.classList.add('sc-modal-open');
+      requestAnimationFrame(() => dialog.classList.add('is-open'));
+      fitCheck(); // the media area has no size until the dialog is shown
+    }
+    (checkMode ? $('sc-back') : dialog.querySelector<HTMLElement>('.sc-info .sc-close')!).focus({ preventScroll: true }); // phones: keep the video in view
+  };
+  const close = () => {
+    if (!dialog.open || dialog.classList.contains('is-closing')) return;
+    const card = document.querySelector<HTMLElement>(`[data-scenario="${current}"]`);
+    dialog.classList.replace('is-open', 'is-closing');
+    history.replaceState(null, '', location.pathname + location.search);
+    closing = window.setTimeout(() => {
+      dialog.close();
+      dialog.classList.remove('is-closing');
+      panel.classList.remove('sc-wide');
+      checkMode = false;
+      document.documentElement.classList.remove('sc-modal-open');
+      clearMedia();
+      card?.focus();
+    }, CLOSE_MS);
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-scenario]').forEach(card => card.addEventListener('click', () => open(card.dataset.scenario!)));
+  dialog.querySelectorAll('.sc-close').forEach(button => button.addEventListener('click', close));
+  dialog.addEventListener('cancel', event => { event.preventDefault(); checkMode ? setMode(false) : close(); }); // Esc: back to the video first, then close
+  dialog.addEventListener('click', event => { if (event.target === dialog) close(); }); // the dialog box itself is only the backdrop area
+  saw.addEventListener('click', () => setMode(true));
+  $('sc-back').addEventListener('click', () => setMode(false));
+  prev.addEventListener('click', () => render(order[order.indexOf(current) - 1]));
+  next.addEventListener('click', () => render(order[order.indexOf(current) + 1]));
+  document.addEventListener('keydown', event => {
+    if (!dialog.open) return;
+    if (event.key === 'Tab') { // keep focus inside the modal, skipping hidden controls
+      const focusable = [...dialog.querySelectorAll<HTMLElement>('button:not(:disabled), video, iframe')].filter(el => el.offsetParent !== null);
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+      return;
+    }
+    if (checkMode || (event.target as Element).tagName === 'VIDEO') return; // arrows seek the video
+    if (event.key === 'ArrowLeft' && !prev.disabled) prev.click();
+    if (event.key === 'ArrowRight' && !next.disabled) next.click();
+  });
+
+  const fromHash = () => {
+    const [id, mode] = location.hash.slice(1).split('-');
+    if (data[id]) open(id, mode === 'check');
+  };
+  addEventListener('hashchange', fromHash);
+  fromHash();
+</script>
+
+<style is:global>
+  .sc-chapter{margin-top:72px}
+  .section-head+.sc-chapter{margin-top:44px}
+  .sc-eyebrow{font-size:10px;letter-spacing:.12em;font-weight:600;margin:0}
+  .sc-chapter-title{font-size:28px;font-weight:600;letter-spacing:-.01em;margin:10px 0 24px}
+  .sc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .sc-card{display:flex;flex-direction:column;padding:0;background:#1A1A20;border:1px solid #2C2C36;color:#EDEDF2;font:inherit;text-align:left;cursor:pointer;transition:border-color .2s,transform .2s}
+  .sc-card:hover,.sc-card:focus-visible{border-color:#4B47FF;outline:none;transform:translateY(-2px)}
+  .sc-thumb{display:block;width:100%;height:240px;object-fit:cover;background:#000;border-bottom:1px solid #2C2C36}
+  .sc-body{display:flex;flex-direction:column;gap:8px;flex:1;padding:20px 20px 22px}
+  .sc-meta{font:12px/1 ui-monospace,"JetBrains Mono",Menlo,monospace;letter-spacing:.06em;color:#A0A0AA;margin:0}
+  .sc-title{font-size:20px;font-weight:600}
+  .sc-rule{min-height:44px;font-size:14px;line-height:1.55;color:#A0A0AA}
+  .sc-view{margin-top:auto;font-size:13px;letter-spacing:.08em;color:#8A87FF}
+
+  /* Modal: backdrop and timing from the credits modal (.ref-overlay). */
+  html.sc-modal-open{overflow:hidden}
+  .sc-modal{width:100%;max-width:none;height:100%;max-height:none;margin:0;padding:24px;border:0;background:transparent;color:#EDEDF2;overflow:auto;display:grid;place-items:center;opacity:0;transition:opacity 150ms cubic-bezier(0.22, 1, 0.36, 1)}
+  .sc-modal:not([open]){display:none}
+  .sc-modal::backdrop{background:rgb(16 16 20 / .8)}
+  .sc-modal.is-open{opacity:1;transition-duration:250ms}
+  .sc-panel{width:min(1000px,100%);display:grid;grid-template-columns:360px 1fr;background:#1A1A20;border:1px solid #2C2C36;box-shadow:0 24px 80px rgb(0 0 0 / .5);transform:scale(.96);transition:transform 150ms cubic-bezier(0.22, 1, 0.36, 1),opacity 150ms ease}
+  .sc-modal.is-open .sc-panel{transform:none;transition-duration:250ms,150ms}
+  .sc-media{position:relative;width:360px;aspect-ratio:9/19.5;background:#000}
+  .sc-media video,.sc-media iframe{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:contain;background:#000}
+  .sc-info{display:flex;flex-direction:column;gap:20px;padding:28px 32px}
+  .sc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+  .sc-m-title{font-size:32px;line-height:1.1;font-weight:600;letter-spacing:-.01em;margin:8px 0 0}
+  .sc-close{flex:none;width:44px;height:44px;background:none;border:1px solid #2C2C36;color:#EDEDF2;font-size:22px;cursor:pointer}
+  .sc-close:hover{border-color:#EDEDF2}
+  .sc-sec h3{margin:0 0 6px;font-size:10px;letter-spacing:.12em;font-weight:600;color:#8A87FF}
+  .sc-sec p{margin:0;font-size:15px;line-height:1.6}
+  .sc-sec .sc-flags{padding:10px 12px;background:#101014;border:1px solid #2C2C36;font:14px/1.5 ui-monospace,"JetBrains Mono",Menlo,monospace;overflow-wrap:anywhere}
+  .sc-btn{padding:12px 16px;background:none;border:1px solid #EDEDF2;color:#EDEDF2;font:inherit;font-size:13px;letter-spacing:.08em;text-align:left;cursor:pointer}
+  .sc-btn:hover{border-color:#4B47FF;color:#8A87FF}
+  .sc-btn[hidden]{display:none}
+  .sc-nav{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:auto}
+  .sc-nav .sc-btn{display:flex;flex-direction:column;gap:4px;letter-spacing:0;font-size:14px}
+  .sc-nav small{font-size:10px;letter-spacing:.12em;color:#A0A0AA}
+  .sc-nav .sc-btn:last-child{align-items:flex-end;text-align:right}
+  .sc-nav .sc-btn:disabled{opacity:.3;cursor:default;border-color:#2C2C36;color:#A0A0AA}
+  /* Check mode: the modal widens and the check page fills it. */
+  .sc-panel.sc-swap{opacity:0}
+  .sc-checkbar{display:none}
+  .sc-panel.sc-wide{width:min(1260px, 100vw - 48px);height:calc(100dvh - 48px);grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);overflow:hidden}
+  .sc-panel.sc-wide .sc-info{display:none}
+  .sc-panel.sc-wide .sc-checkbar{display:flex;align-items:center;justify-content:space-between;gap:16px;min-width:0;padding:14px 20px;border-bottom:1px solid #2C2C36}
+  .sc-checkbar>div:first-child{min-width:0}
+  .sc-cb-title{margin:6px 0 0;font-size:18px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sc-cb-actions{display:flex;flex:none;gap:12px;align-items:center}
+  .sc-panel.sc-wide .sc-media{width:100%;height:100%;max-width:none;aspect-ratio:auto;margin:0;overflow:auto;background:#11151b}
+  .sc-panel.sc-wide .sc-media iframe{inset:auto;top:0;left:0;transform-origin:0 0}
+  .sc-card:focus-visible,.sc-btn:focus-visible,.sc-close:focus-visible{outline:2px solid #8A87FF;outline-offset:2px}
+  @media (prefers-reduced-motion:reduce){.sc-modal,.sc-panel,.sc-card{transition:none!important}}
+  @media (max-width:900px){
+    .sc-grid{grid-template-columns:1fr 1fr}
+    .sc-modal{padding:12px;place-items:start center}
+    .sc-panel{grid-template-columns:1fr}
+    .sc-media{width:min(100%, 360px, 62svh * 9 / 19.5);margin:0 auto}
+    .sc-info{padding:24px 20px}
+  }
+  @media (max-width:600px){
+    .sc-modal{padding:8px}
+    .sc-panel.sc-wide{width:calc(100vw - 16px);height:calc(100dvh - 16px)}
+    .sc-panel.sc-wide .sc-checkbar{padding:10px 12px}
+    .sc-cb-title{font-size:16px}
+    #sc-back{padding:10px 12px;white-space:nowrap}
+    .sc-long{display:none}
+    .sc-grid{grid-template-columns:1fr}
+    .sc-chapter-title{font-size:24px}
+    .sc-m-title{font-size:26px}
+  }
+</style>

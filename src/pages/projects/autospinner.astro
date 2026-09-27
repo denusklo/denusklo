@@ -1,6 +1,7 @@
 ---
 import PortfolioLayout from '@/layouts/PortfolioLayout.astro';
 import CaseStudy from '@/components/CaseStudy.astro';
+import Scenarios from '@/components/Scenarios.astro';
 
 const study = {
   number: '02',
@@ -54,5 +55,5 @@ const study = {
   description={study.what}
   image="/portfolio/autospinner-poster.jpg"
 >
-  <CaseStudy study={study} />
+  <CaseStudy study={study}><Scenarios /></CaseStudy>
 </PortfolioLayout>
