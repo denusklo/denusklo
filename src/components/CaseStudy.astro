@@ -2,6 +2,7 @@
 import ContactCta from './ContactCta.astro';
 import ScrollProgress from './ScrollProgress.astro';
 import ExternalLink from './ExternalLink.astro';
+import Play from './Play.astro';
 
 // Shared case-study page body; each /projects/* page passes its own copy.
 // An `object` slot replaces the static object image (autospinner's 3D stage).
@@ -26,7 +27,7 @@ const { study } = Astro.props;
     <figure class="demo" {...(i === 0 && { id: 'demo', 'data-section': 'Demo' })}>
       <div class="demo-frame">
         <video muted loop playsinline preload="none" poster={demo.poster} aria-label={demo.alt}><source src={demo.src} type="video/mp4"></video>
-        <span class="demo-label">▶ {demo.label}</span>
+        <span class="demo-label"><Play /> {demo.label}</span>
       </div>
       <figcaption>{demo.caption}</figcaption>
     </figure>

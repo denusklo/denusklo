@@ -374,7 +374,7 @@
       <div class="container mx-auto px-6">
         <div class="flex flex-col md:flex-row justify-between items-center gap-4">
           <p class="footer-text text-sm font-mono" :class="textClasses">
-            © 2024 DEN KONG // ALL SYSTEMS OPERATIONAL
+            ©︎ 2024 DEN KONG // ALL SYSTEMS OPERATIONAL
           </p>
           <div class="footer-links flex gap-6">
             <a href="#" class="footer-link text-sm font-mono transition-opacity hover:opacity-100" :class="textClasses">
