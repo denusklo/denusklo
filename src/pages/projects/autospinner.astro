@@ -2,6 +2,7 @@
 import PortfolioLayout from '@/layouts/PortfolioLayout.astro';
 import CaseStudy from '@/components/CaseStudy.astro';
 import Scenarios from '@/components/Scenarios.astro';
+import AutospinnerObject from '@/components/AutospinnerObject.astro';
 
 const study = {
   number: '02',
@@ -9,7 +10,6 @@ const study = {
   what: 'Solves Tower of Saviors orb boards in a browser or on Android, then executes the drag.',
   why: 'Choosing and dragging an orb route by hand was the problem I wanted to automate.',
   platform: 'BROWSER + ANDROID',
-  object: { src: '/portfolio/autospinner-object.png', alt: 'Shallow orb-board relief with one ultramarine orb selected', caption: 'ORB-BOARD RELIEF' },
   demos: [
     {
       src: '/portfolio/autospinner-demo.mp4',
@@ -55,5 +55,5 @@ const study = {
   description={study.what}
   image="/portfolio/autospinner-poster.jpg"
 >
-  <CaseStudy study={study}><Scenarios /></CaseStudy>
+  <CaseStudy study={study}><AutospinnerObject slot="object" /><Scenarios /></CaseStudy>
 </PortfolioLayout>
