@@ -42,7 +42,7 @@ const { title, description, image = '/portfolio/hero-poster.jpg', imageAlt = 'Bu
     <meta name="theme-color" content="#101014" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
   <body>
     <script is:inline>
@@ -103,7 +103,7 @@ const { title, description, image = '/portfolio/hero-poster.jpg', imageAlt = 'Bu
   .loader-grid{display:grid;grid-template-columns:repeat(3,4px);gap:1.5px}
   .loader-grid i{width:4px;height:4px;border-radius:1px;background:var(--ink);opacity:.15;animation:pixel-on 650ms ease-in-out infinite}
   .loader-label{font-size:13px;font-weight:500;color:transparent;background:linear-gradient(90deg,var(--ink-3) 35%,var(--ink) 50%,var(--ink-3) 65%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;animation:shimmer-text 1.4s linear infinite}
-  .loader-time{font:12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink-3);font-variant-numeric:tabular-nums}
+  .loader-time{font:12px "JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink-3);font-variant-numeric:tabular-nums}
   @keyframes pixel-on{0%,100%{opacity:.15}30%{opacity:1}}
   @keyframes shimmer-text{from{background-position:100% 0}to{background-position:-100% 0}}
   @media (prefers-reduced-motion:reduce){
