@@ -1,4 +1,6 @@
 ---
+import Arrow from './Arrow.astro';
+
 const { platform, username } = Astro.props;
 ---
 <style>
@@ -28,4 +30,4 @@ const { platform, username } = Astro.props;
   }
 </style>
 
-<a href={`https://www.${platform}.com/${username}`}>{platform}</a>
+<a href={`https://www.${platform}.com/${username}`} target="_blank" rel="noopener noreferrer">{platform}&nbsp;<Arrow /><span class="sr-only"> (opens in new tab)</span></a>

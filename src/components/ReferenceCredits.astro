@@ -1,4 +1,6 @@
 ---
+import ExternalLink from './ExternalLink.astro';
+
 // Colophon credits for the design references, each with a thumbnail that opens the image in a modal.
 const references = [
   {
@@ -20,7 +22,7 @@ const references = [
 {references.map(ref => (
   <p class="ref-line">
     <button class="ref-thumb" type="button" data-ref-open={ref.id} aria-label={`View reference: ${ref.name}`}><img src={ref.src} alt="" loading="lazy" /></button>
-    <span><Fragment set:html={ref.caption} /> <a href={ref.source}>source ↗</a></span>
+    <span><Fragment set:html={ref.caption} /> <ExternalLink href={ref.source}>source</ExternalLink></span>
   </p>
 ))}
 {references.map(ref => (
@@ -28,7 +30,7 @@ const references = [
     <div class="ref-panel t-modal" role="dialog" aria-modal="true" aria-labelledby={`ref-${ref.id}-caption`}>
       <button class="ref-close" type="button">CLOSE</button>
       <img src={ref.src} alt={ref.name} loading="lazy" />
-      <p class="ref-caption"><span id={`ref-${ref.id}-caption`} set:html={ref.caption} /> <a href={ref.source}>source ↗</a></p>
+      <p class="ref-caption"><span id={`ref-${ref.id}-caption`} set:html={ref.caption} /> <ExternalLink href={ref.source}>source</ExternalLink></p>
     </div>
   </div>
 ))}

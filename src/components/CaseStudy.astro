@@ -1,12 +1,13 @@
 ---
 import ContactCta from './ContactCta.astro';
 import ScrollProgress from './ScrollProgress.astro';
+import ExternalLink from './ExternalLink.astro';
 
 // Shared case-study page body; each /projects/* page passes its own copy.
 // An `object` slot replaces the static object image (autospinner's 3D stage).
 const { study } = Astro.props;
 ---
-<header class="cs-nav"><div class="cs-inner"><a class="wordmark" href="/">Den</a><nav><a class="home" href="/">← HOME</a><span>WORK / {study.name.toUpperCase()}</span><a href="https://github.com/denusklo">GITHUB ↗</a></nav></div></header>
+<header class="cs-nav"><div class="cs-inner"><a class="wordmark" href="/">Den</a><nav><a class="home" href="/">← HOME</a><span>WORK / {study.name.toUpperCase()}</span><ExternalLink href="https://github.com/denusklo">GITHUB</ExternalLink></nav></div></header>
 <ScrollProgress />
 <main class="cs">
   <section class="cs-intro" id="overview" data-section="Overview">
@@ -64,7 +65,7 @@ const { study } = Astro.props;
     <a class="next" href={study.next.href}>{study.next.name} <span aria-hidden="true">→</span></a>
     <div class="foot-cols">
       <div><p class="small-label">CONTACT</p><a class="email" href="mailto:denusklo@gmail.com">denusklo@gmail.com</a><ContactCta /></div>
-      <div><p class="small-label">CODE</p><a class="quiet" href="https://github.com/denusklo">github.com/denusklo ↗</a></div>
+      <div><p class="small-label">CODE</p><ExternalLink class="quiet" href="https://github.com/denusklo">github.com/denusklo</ExternalLink></div>
       <div><p class="small-label">BACK</p><a class="quiet" href="/">← Home</a><p class="quiet">All work, the band and the colophon live on the home page.</p></div>
     </div>
     <div class="baseline"><span>DEN · 2026<a href="/v1">PREVIOUS SITE →</a></span><span>CASE STUDY {study.number} / 02</span></div>

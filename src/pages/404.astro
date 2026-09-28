@@ -1,0 +1,19 @@
+---
+import PortfolioLayout from '@/layouts/PortfolioLayout.astro';
+---
+<PortfolioLayout title="Not found · Den Kong" description="This page doesn't exist." noindex>
+  <main class="nf">
+    <p>404</p>
+    <h1>Not found</h1>
+    <a href="/">← Home</a>
+  </main>
+</PortfolioLayout>
+
+<style is:global>
+  html,body{margin:0;background:#101014;color:#EDEDF2;font-family:Inter,Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased}
+  .nf{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:0 var(--gutter, 120px)}
+  .nf p{margin:0;font-size:11px;letter-spacing:.1em;font-weight:600;color:#8A87FF}
+  .nf h1{margin:18px 0 28px;font-size:clamp(44px, 8vw, 108px);line-height:1;letter-spacing:-.035em;font-weight:600}
+  .nf a{color:inherit;font-size:14px;text-decoration:none}
+  .nf a:hover{text-decoration:underline}
+</style>

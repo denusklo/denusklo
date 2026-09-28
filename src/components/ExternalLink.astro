@@ -1,0 +1,7 @@
+---
+import Arrow from './Arrow.astro';
+
+// Link to another site: new tab, arrow, and a screen-reader note that it opens a new tab.
+const { href, ...rest } = Astro.props;
+---
+<a href={href} target="_blank" rel="noopener noreferrer" {...rest}><slot />&nbsp;<Arrow /><span class="sr-only"> (opens in new tab)</span></a>

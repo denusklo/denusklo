@@ -1,5 +1,6 @@
 ---
 import PortfolioLayout from '@/layouts/PortfolioLayout.astro';
+import { caseStudySchema } from '@/data/schema';
 import CaseStudy from '@/components/CaseStudy.astro';
 import Scenarios from '@/components/Scenarios.astro';
 import AutospinnerObject from '@/components/AutospinnerObject.astro';
@@ -51,9 +52,13 @@ const study = {
 };
 ---
 <PortfolioLayout
-  title="autospinner · case study"
+  title="autospinner · Den Kong"
   description={study.what}
   image="/portfolio/autospinner-poster.jpg"
+  imageAlt="Tower of Saviors orb board with browser solver controls"
+  imageWidth={1752}
+  imageHeight={986}
+  schema={caseStudySchema({ name: study.name, description: study.what, path: '/projects/autospinner/', image: '/portfolio/autospinner-poster.jpg' })}
 >
   <CaseStudy study={study}><AutospinnerObject slot="object" /><Scenarios /></CaseStudy>
 </PortfolioLayout>

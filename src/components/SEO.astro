@@ -20,6 +20,9 @@ interface Props {
   ogTitle?: string;
   ogDescription?: string;
   ogImage?: string;
+  imageAlt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
 
   // Twitter Card
   twitterCard?: 'summary' | 'summary_large_image';
@@ -29,6 +32,8 @@ interface Props {
 
   // Structured Data (JSON-LD)
   schema?: Record<string, any>;
+
+  noindex?: boolean;
 }
 
 const {
@@ -45,6 +50,10 @@ const {
   twitterDescription = ogDescription,
   twitterImage = ogImage,
   schema,
+  imageAlt = 'Den Kong',
+  imageWidth = 1200,
+  imageHeight = 630,
+  noindex = false,
 } = Astro.props;
 
 // SEO: Site URL configuration (must match astro.config.mjs)
@@ -59,7 +68,7 @@ const absoluteImage = image.startsWith('http') ? image : `${configuredSite}${ima
 ---
 
 <!-- Canonical URL - prevents duplicate content issues -->
-<link rel="canonical" href={canonicalURL || currentURL} />
+{!noindex && <link rel="canonical" href={canonicalURL || currentURL} />}
 
 <!-- Open Graph Tags - for Facebook, LinkedIn, etc. -->
 <meta property="og:title" content={ogTitle} />
@@ -68,6 +77,10 @@ const absoluteImage = image.startsWith('http') ? image : `${configuredSite}${ima
 <meta property="og:url" content={currentURL} />
 <meta property="og:type" content={ogType} />
 <meta property="og:site_name" content="Den Kong" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:image:alt" content={imageAlt} />
+<meta property="og:image:width" content={String(imageWidth)} />
+<meta property="og:image:height" content={String(imageHeight)} />
 <!-- Facebook App ID (optional - for Facebook Insights analytics) -->
 <!-- To remove warning, create app at: https://developers.facebook.com/apps/ -->
 <meta property="fb:app_id" content="placeholder" />
@@ -77,6 +90,9 @@ const absoluteImage = image.startsWith('http') ? image : `${configuredSite}${ima
 <meta name="twitter:title" content={twitterTitle} />
 <meta name="twitter:description" content={twitterDescription} />
 <meta name="twitter:image" content={twitterImage.startsWith('http') ? twitterImage : absoluteImage} />
+<meta name="twitter:image:alt" content={imageAlt} />
+
+{noindex && <meta name="robots" content="noindex, follow" />}
 
 <!-- Structured Data (JSON-LD) - helps Google understand your content -->
 {schema && (
