@@ -21,6 +21,7 @@ export default defineConfig({
     // `@jsxImportSource react` pragma, while tsconfig keeps Preact as the default JSX source.
     react(),
     // SEO: Automatically generates sitemap.xml at build time
-    sitemap(),
+    // Leftover Astro-tutorial pages under /v1 are noindexed and kept out of the sitemap.
+    sitemap({ filter: page => !/\/v1\/(blog|posts|tags|vue)(\/|$)/.test(new URL(page).pathname) }),
   ]
 });

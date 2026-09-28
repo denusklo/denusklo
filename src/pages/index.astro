@@ -5,14 +5,17 @@ import ContactCta from '@/components/ContactCta.astro';
 import ScrollProgress from '@/components/ScrollProgress.astro';
 import FluidField from '@/components/react/FluidField';
 import ReferenceCredits from '@/components/ReferenceCredits.astro';
+import ExternalLink from '@/components/ExternalLink.astro';
+import { homeSchema } from '@/data/schema';
 import '@/styles/portfolio-home.css';
 import '@/styles/portfolio-responsive.css';
 ---
 <PortfolioLayout
-  title="Den · selected work"
+  title="Den Kong · selected work"
   description="Den's portfolio: HoopLandHelper, autospinner and open-source contributions."
+  schema={homeSchema}
 >
-  <header class="nav" id="nav"><div class="nav-inner"><a class="wordmark" href="/">Den</a><a class="nav-code" href="https://github.com/denusklo">GITHUB.COM/DENUSKLO ↗</a></div></header>
+  <header class="nav" id="nav"><div class="nav-inner"><a class="wordmark" href="/">Den</a><ExternalLink class="nav-code" href="https://github.com/denusklo">GITHUB.COM/DENUSKLO</ExternalLink></div></header>
   <ScrollProgress />
   <div class="hero-track" id="hero-track">
     <section class="hero" id="hero" aria-label="Butterfly resting on a green field">
@@ -22,6 +25,7 @@ import '@/styles/portfolio-responsive.css';
   </div>
   <div class="page">
     <main>
+      <h1 class="sr-only">Den Kong: selected work</h1>
       <section class="selected content" id="selected-work" data-section="Selected work" aria-label="Selected work">
         <div class="section-head"><h2>SELECTED WORK</h2><span>CASE STUDIES</span></div>
         <article class="teaser"><div class="teaser-image"><img src="/portfolio/hooplandhelper-poster.jpg" alt="Hoop Land basketball game and shot-meter reconstruction"><span class="poster-label">RECONSTRUCTION</span></div><div class="teaser-copy"><h3>HoopLandHelper</h3><p>Watches a phone basketball game's shot meter on a live screen feed and releases each shot on the green.</p><a href="/projects/hooplandhelper">Read the case study →</a></div></article>
@@ -35,20 +39,20 @@ import '@/styles/portfolio-responsive.css';
       <section class="also content" id="also-built" data-section="Also built" aria-label="Also built">
         <div class="section-head"><h2>ALSO BUILT</h2></div>
         <div class="secondary-grid">
-          <article class="secondary-card"><div class="placeholder-still fluid-slot"><FluidField client:visible /></div><div class="secondary-copy"><h3>gall_2</h3><p>A photo gallery with albums and cloud uploads, plus a board where people post requests and others complete them.</p><p class="reason">Built for learning: one full Laravel and Vue app, end to end.</p><small>LARAVEL · VUE · MYSQL · SUPABASE · FIREBASE</small><a href="https://gall-2.vercel.app">gall-2.vercel.app ↗</a></div></article>
+          <article class="secondary-card"><div class="placeholder-still fluid-slot"><FluidField client:visible /></div><div class="secondary-copy"><h3>gall_2</h3><p>A photo gallery with albums and cloud uploads, plus a board where people post requests and others complete them.</p><p class="reason">Built for learning: one full Laravel and Vue app, end to end.</p><small>LARAVEL · VUE · MYSQL · SUPABASE · FIREBASE</small><ExternalLink href="https://gall-2.vercel.app">gall-2.vercel.app</ExternalLink></div></article>
           <article class="secondary-card"><div class="placeholder-still fluid-slot"><FluidField client:visible timeOffset={37} base="#23232B" mid="#A0A0AA" color="#EDEDF2" highlight={[0.78, 1.0]} /></div><div class="secondary-copy"><h3>Open Source</h3><p>Pull requests to repos I actually use.</p><p class="reason">Fixing the tools I use, where they break.</p><small>TYPESCRIPT · SHELL · GO</small><a href="#contributions">Each one broken out below ↓</a></div></article>
         </div>
       </section>
       <section class="contributions content" id="contributions" data-section="Contributions" aria-label="Open-source contributions">
-        <div class="section-head"><h2>WHAT IS IN EACH CONTRIBUTION</h2><a href="https://github.com/denusklo">GITHUB.COM/DENUSKLO ↗</a></div>
+        <div class="section-head"><h2>WHAT IS IN EACH CONTRIBUTION</h2><ExternalLink href="https://github.com/denusklo">GITHUB.COM/DENUSKLO</ExternalLink></div>
         {contributions.map(c => (
-          <div class="contribution"><div><strong>{c.repo}</strong><small>{c.language}</small></div><div><p>{c.change.split('`').map((part, i) => i % 2 ? <code>{part}</code> : part)}</p>{c.why && <p>{c.why}</p>}</div><div class="contribution-meta"><span>{c.status}</span><small>{c.date}</small><a href={c.url}>view PR ↗</a></div></div>
+          <div class="contribution"><div><strong>{c.repo}</strong><small>{c.language}</small></div><div><p>{c.change.split('`').map((part, i) => i % 2 ? <code>{part}</code> : part)}</p>{c.why && <p>{c.why}</p>}</div><div class="contribution-meta"><span>{c.status}</span><small>{c.date}</small><ExternalLink href={c.url}>view PR</ExternalLink></div></div>
         ))}
       </section>
     </main>
     <footer class="foot content" id="contact" data-section="Contact">
       <div class="waterfall" id="waterfall" aria-hidden="true"><div class="waterfall-set set-a"></div><div class="waterfall-set set-b"></div></div>
-      <div class="foot-columns"><div><h2>CONTACT</h2><a class="email" href="mailto:denusklo@gmail.com">denusklo@gmail.com</a><p>Email is the fastest way to reach me.</p><ContactCta /></div><div><h2>CODE</h2><a href="https://github.com/denusklo">github.com/denusklo ↗</a><p>Source for everything on this page.</p></div><div><h2>COLOPHON</h2><p>Inter, one weight axis.<br>A fixed grid with generous margins.<br>Ultramarine on near-black, one accent colour.</p><ReferenceCredits /><p class="ui-credits">UI from <a href="https://beui.dev">beui&nbsp;↗</a>, <a href="https://www.beautifului.dev">Beautiful&nbsp;UI&nbsp;↗</a>, <a href="https://www.rareui.com">Rare&nbsp;UI&nbsp;↗</a> and <a href="https://transitions.dev">Transitions.dev&nbsp;↗</a></p><p class="ui-credits">3D object: Higgsfield (Nano Banana Pro → Tripo H3.1), three.js</p></div><div><h2>THIS PAGE</h2><p>Personal portfolio.<br>Not a landing page. No pitch, no funnel.<br>Built by the person who built the projects.</p></div></div>
+      <div class="foot-columns"><div><h2>CONTACT</h2><a class="email" href="mailto:denusklo@gmail.com">denusklo@gmail.com</a><p>Email is the fastest way to reach me.</p><ContactCta /></div><div><h2>CODE</h2><ExternalLink href="https://github.com/denusklo">github.com/denusklo</ExternalLink><p>Source for everything on this page.</p></div><div><h2>COLOPHON</h2><p>Inter, one weight axis.<br>A fixed grid with generous margins.<br>Ultramarine on near-black, one accent colour.</p><ReferenceCredits /><p class="ui-credits">UI from <ExternalLink href="https://beui.dev">beui</ExternalLink>, <ExternalLink href="https://www.beautifului.dev">Beautiful&nbsp;UI</ExternalLink>, <ExternalLink href="https://www.rareui.com">Rare&nbsp;UI</ExternalLink> and <ExternalLink href="https://transitions.dev">Transitions.dev</ExternalLink></p><p class="ui-credits">3D object: Higgsfield (Nano Banana Pro → Tripo H3.1), three.js</p></div><div><h2>THIS PAGE</h2><p>Personal portfolio.<br>Not a landing page. No pitch, no funnel.<br>Built by the person who built the projects.</p></div></div>
       <div class="baseline"><span>DEN<a href="/v1">PREVIOUS SITE →</a></span><span>DEN · 2026</span></div>
     </footer>
   </div>

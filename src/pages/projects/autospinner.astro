@@ -1,5 +1,6 @@
 ---
 import PortfolioLayout from '@/layouts/PortfolioLayout.astro';
+import { caseStudySchema } from '@/data/schema';
 import CaseStudy from '@/components/CaseStudy.astro';
 import Scenarios from '@/components/Scenarios.astro';
 import AutospinnerObject from '@/components/AutospinnerObject.astro';
@@ -10,6 +11,7 @@ const study = {
   what: 'Solves Tower of Saviors orb boards in a browser or on Android, then executes the drag.',
   why: 'Choosing and dragging an orb route by hand was the problem I wanted to automate.',
   platform: 'BROWSER + ANDROID',
+  repo: 'https://github.com/denusklo/autospinner',
   demos: [
     {
       src: '/portfolio/autospinner-demo.mp4',
@@ -51,9 +53,13 @@ const study = {
 };
 ---
 <PortfolioLayout
-  title="autospinner · case study"
+  title="autospinner · Den Kong"
   description={study.what}
   image="/portfolio/autospinner-poster.jpg"
+  imageAlt="Tower of Saviors orb board with browser solver controls"
+  imageWidth={1752}
+  imageHeight={986}
+  schema={caseStudySchema({ name: study.name, description: study.what, path: '/projects/autospinner/', image: '/portfolio/autospinner-poster.jpg', repo: study.repo })}
 >
   <CaseStudy study={study}><AutospinnerObject slot="object" /><Scenarios /></CaseStudy>
 </PortfolioLayout>

@@ -1,19 +1,21 @@
 ---
 import ContactCta from './ContactCta.astro';
 import ScrollProgress from './ScrollProgress.astro';
+import ExternalLink from './ExternalLink.astro';
+import Play from './Play.astro';
 
 // Shared case-study page body; each /projects/* page passes its own copy.
 // An `object` slot replaces the static object image (autospinner's 3D stage).
 const { study } = Astro.props;
 ---
-<header class="cs-nav"><div class="cs-inner"><a class="wordmark" href="/">Den</a><nav><a class="home" href="/">← HOME</a><span>WORK / {study.name.toUpperCase()}</span><a href="https://github.com/denusklo">GITHUB ↗</a></nav></div></header>
+<header class="cs-nav"><div class="cs-inner"><a class="wordmark" href="/">Den</a><nav><a class="home" href="/">← HOME</a><span>WORK / {study.name.toUpperCase()}</span><ExternalLink href="https://github.com/denusklo">GITHUB</ExternalLink></nav></div></header>
 <ScrollProgress />
 <main class="cs">
   <section class="cs-intro" id="overview" data-section="Overview">
     <p class="accent-label">CASE STUDY {study.number}</p>
     <h1>{study.name}</h1>
     <p class="lead">{study.what}</p>
-    <p class="tags">{study.stack.map(s => s.name).join(' · ')}<span>{study.platform}</span></p>
+    <p class="tags">{study.stack.map(s => s.name).join(' · ')}<span>{study.platform}</span><ExternalLink href={study.repo}>SOURCE ON GITHUB</ExternalLink></p>
   </section>
   {Astro.slots.has('object') ? <slot name="object" /> : (
     <figure class="object">
@@ -25,7 +27,7 @@ const { study } = Astro.props;
     <figure class="demo" {...(i === 0 && { id: 'demo', 'data-section': 'Demo' })}>
       <div class="demo-frame">
         <video muted loop playsinline preload="none" poster={demo.poster} aria-label={demo.alt}><source src={demo.src} type="video/mp4"></video>
-        <span class="demo-label">▶ {demo.label}</span>
+        <span class="demo-label"><Play /> {demo.label}</span>
       </div>
       <figcaption>{demo.caption}</figcaption>
     </figure>
@@ -64,7 +66,7 @@ const { study } = Astro.props;
     <a class="next" href={study.next.href}>{study.next.name} <span aria-hidden="true">→</span></a>
     <div class="foot-cols">
       <div><p class="small-label">CONTACT</p><a class="email" href="mailto:denusklo@gmail.com">denusklo@gmail.com</a><ContactCta /></div>
-      <div><p class="small-label">CODE</p><a class="quiet" href="https://github.com/denusklo">github.com/denusklo ↗</a></div>
+      <div><p class="small-label">CODE</p><ExternalLink class="quiet" href="https://github.com/denusklo">github.com/denusklo</ExternalLink></div>
       <div><p class="small-label">BACK</p><a class="quiet" href="/">← Home</a><p class="quiet">All work, the band and the colophon live on the home page.</p></div>
     </div>
     <div class="baseline"><span>DEN · 2026<a href="/v1">PREVIOUS SITE →</a></span><span>CASE STUDY {study.number} / 02</span></div>
@@ -106,7 +108,10 @@ const { study } = Astro.props;
   .cs-intro h1{font-size:108px;line-height:1;letter-spacing:-.035em;font-weight:600;margin:22px 0 30px}
   .lead{max-width:830px;font-size:24px;line-height:1.5;color:#B4B4C0;margin:0}
   .tags{font-size:10px;letter-spacing:.13em;color:#A0A0AA;margin:34px 0 0;word-spacing:.3em}
-  .tags span{margin-left:36px}
+  .tags>span{margin-left:36px}
+  .tags a{margin-left:36px;text-decoration:none;color:#EDEDF2}
+  .tags a:hover{text-decoration:underline}
+  .tags a:focus-visible{outline:1px solid #8A87FF;outline-offset:3px}
   .object{margin:110px 0 0}
   .object img{display:block;width:868px;height:auto;margin:0 auto}
   figcaption{font-size:10px;letter-spacing:.12em;color:#A0A0AA}
@@ -162,7 +167,8 @@ const { study } = Astro.props;
     .cs-intro h1{font-size:clamp(44px, 8.6vw, 108px);overflow-wrap:anywhere}
     .lead{font-size:clamp(18px, 2.1vw, 24px)}
     .tags{line-height:2}
-    .tags span{margin-left:0;display:inline-block;padding-left:clamp(12px, 3vw, 36px)}
+    .tags>span{margin-left:0;display:inline-block;padding-left:clamp(12px, 3vw, 36px)}
+    .tags a{margin-left:0;display:inline-block;padding-left:clamp(12px, 3vw, 36px)}
     .object{margin-top:clamp(48px, 8vw, 110px)}
     .object img{width:min(868px, 100%)}
     .object figcaption{margin-top:clamp(28px, 5vw, 70px)}

@@ -4,12 +4,14 @@ import '@/styles/global.css';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import SEO from '@/components/SEO.astro';
-import StructuredData from '@/components/StructuredData.astro';
 
-const { pageTitle } = Astro.props;
+// The previous site, kept viewable under /v1. `title` overrides the document title;
+// `noindex` keeps leftover tutorial pages out of search (they're also filtered from the sitemap).
+// `contentH1`: the page content has its own h1, so the title renders as a styled <p> to keep one h1 per page.
+const { pageTitle, title, noindex = false, contentH1 = false } = Astro.props;
+const TitleTag = contentH1 ? 'p' : 'h1';
 
-// SEO: Format title as "Page Title | Den Kong" or just "Den Kong" for home
-const fullTitle = pageTitle ? `${pageTitle} | Den Kong` : 'Den Kong';
+const fullTitle = title ?? `${pageTitle} · Den Kong (previous site)`;
 ---
 
 <html lang="en" class="scroll-smooth">
@@ -27,11 +29,9 @@ const fullTitle = pageTitle ? `${pageTitle} | Den Kong` : 'Den Kong';
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
 
+    <title>{fullTitle}</title>
     <!-- SEO Meta Tags Component -->
-    <SEO title={fullTitle} />
-
-    <!-- Structured Data - helps Google understand your content -->
-    <StructuredData type="Person" />
+    <SEO title={fullTitle} imageAlt="Den Kong, previous site" noindex={noindex} />
 
     <!-- Legacy description for backward compatibility -->
     <meta name="description" content="Den Kong's portfolio website - Laravel fullstack developer from Malaysia" />
@@ -52,7 +52,7 @@ const fullTitle = pageTitle ? `${pageTitle} | Den Kong` : 'Den Kong';
       <Header />
 
       <main class="flex-grow py-8">
-        <h1 class="text-4xl font-bold mb-8">{pageTitle}</h1>
+        <TitleTag class="page-title text-4xl font-bold mb-8">{pageTitle}</TitleTag>
         <slot />
       </main>
 
