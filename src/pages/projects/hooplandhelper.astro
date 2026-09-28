@@ -9,6 +9,7 @@ const study = {
   what: "Watches a phone basketball game's shot meter on a live screen feed and releases each shot on the green.",
   why: 'The green release window is too tight to hit by hand every time, so I let software time the tap.',
   platform: 'PHONE + PC',
+  repo: 'https://github.com/denusklo/HoopLandHelper',
   object: { src: '/portfolio/hooplandhelper-object.png', alt: 'Machined linear gauge with a slider parked on the ultramarine sweet spot', caption: 'THE SHOT METER AS A GAUGE' },
   demos: [{
     src: '/portfolio/hooplandhelper-demo.mp4',
@@ -49,7 +50,7 @@ const study = {
   imageAlt="Hoop Land basketball game and shot-meter reconstruction"
   imageWidth={1752}
   imageHeight={986}
-  schema={caseStudySchema({ name: study.name, description: study.what, path: '/projects/hooplandhelper/', image: '/portfolio/hooplandhelper-poster.jpg' })}
+  schema={caseStudySchema({ name: study.name, description: study.what, path: '/projects/hooplandhelper/', image: '/portfolio/hooplandhelper-poster.jpg', repo: study.repo })}
 >
   <CaseStudy study={study} />
 </PortfolioLayout>

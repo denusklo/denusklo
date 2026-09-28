@@ -15,7 +15,7 @@ const { study } = Astro.props;
     <p class="accent-label">CASE STUDY {study.number}</p>
     <h1>{study.name}</h1>
     <p class="lead">{study.what}</p>
-    <p class="tags">{study.stack.map(s => s.name).join(' · ')}<span>{study.platform}</span></p>
+    <p class="tags">{study.stack.map(s => s.name).join(' · ')}<span>{study.platform}</span><ExternalLink href={study.repo}>SOURCE ON GITHUB</ExternalLink></p>
   </section>
   {Astro.slots.has('object') ? <slot name="object" /> : (
     <figure class="object">
@@ -108,7 +108,10 @@ const { study } = Astro.props;
   .cs-intro h1{font-size:108px;line-height:1;letter-spacing:-.035em;font-weight:600;margin:22px 0 30px}
   .lead{max-width:830px;font-size:24px;line-height:1.5;color:#B4B4C0;margin:0}
   .tags{font-size:10px;letter-spacing:.13em;color:#A0A0AA;margin:34px 0 0;word-spacing:.3em}
-  .tags span{margin-left:36px}
+  .tags>span{margin-left:36px}
+  .tags a{margin-left:36px;text-decoration:none;color:#EDEDF2}
+  .tags a:hover{text-decoration:underline}
+  .tags a:focus-visible{outline:1px solid #8A87FF;outline-offset:3px}
   .object{margin:110px 0 0}
   .object img{display:block;width:868px;height:auto;margin:0 auto}
   figcaption{font-size:10px;letter-spacing:.12em;color:#A0A0AA}
@@ -164,7 +167,8 @@ const { study } = Astro.props;
     .cs-intro h1{font-size:clamp(44px, 8.6vw, 108px);overflow-wrap:anywhere}
     .lead{font-size:clamp(18px, 2.1vw, 24px)}
     .tags{line-height:2}
-    .tags span{margin-left:0;display:inline-block;padding-left:clamp(12px, 3vw, 36px)}
+    .tags>span{margin-left:0;display:inline-block;padding-left:clamp(12px, 3vw, 36px)}
+    .tags a{margin-left:0;display:inline-block;padding-left:clamp(12px, 3vw, 36px)}
     .object{margin-top:clamp(48px, 8vw, 110px)}
     .object img{width:min(868px, 100%)}
     .object figcaption{margin-top:clamp(28px, 5vw, 70px)}

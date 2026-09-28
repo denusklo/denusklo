@@ -24,12 +24,13 @@ export const homeSchema = {
   ],
 };
 
-export const caseStudySchema = ({ name, description, path, image }: { name: string; description: string; path: string; image: string }) => ({
+export const caseStudySchema = ({ name, description, path, image, repo }: { name: string; description: string; path: string; image: string; repo: string }) => ({
   '@context': 'https://schema.org',
-  '@type': 'CreativeWork',
+  '@type': 'SoftwareSourceCode',
   name,
   description,
   url: `${site}${path}`,
   image: `${site}${image}`,
+  codeRepository: repo,
   author: { '@id': personId },
 });
