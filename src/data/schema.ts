@@ -9,9 +9,9 @@ export const homeSchema = {
       '@type': 'Person',
       '@id': personId,
       name: 'Den Kong',
-      alternateName: 'Den',
+      alternateName: ['Den', 'Kong Chak Sung', 'Chak Sung Kong'],
       url: `${site}/`,
-      sameAs: ['https://github.com/denusklo'],
+      sameAs: ['https://github.com/denusklo', 'https://www.linkedin.com/in/chak-sung-kong/'],
       email: 'mailto:denusklo@gmail.com',
     },
     {
