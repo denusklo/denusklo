@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import StructuredData from '../components/StructuredData.astro';
 
-const { frontmatter } = Astro.props;
+const { frontmatter, headings = [] } = Astro.props;
 
 // Article schema for blog posts - helps Google show rich results
 const articleSchema = {
@@ -30,7 +30,7 @@ const articleSchema = {
   },
 };
 ---
-<BaseLayout pageTitle={frontmatter.title} noindex>
+<BaseLayout pageTitle={frontmatter.title} noindex contentH1={headings.some(h => h.depth === 1)}>
   <!-- Article schema for rich results -->
   <StructuredData data={articleSchema} />
 
